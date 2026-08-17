@@ -1,0 +1,262 @@
+// Prisma schema for Budget App
+// See SPEC.md section 5 for the conceptual data model this implements.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Auth (NextAuth.js Prisma adapter models)
+// Note: NextAuth's own "Account" (OAuth link) is a different concept from our
+// domain "PayAccount" (a job/income source) below — kept separate on purpose.
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String? // hashed password for credentials login
+
+  accounts Account[]
+  sessions Session[]
+  profiles Profile[]
+
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Domain: Profiles & Pay Accounts
+// ---------------------------------------------------------------------------
+
+model Profile {
+  id     String @id @default(cuid())
+  name   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  payAccounts PayAccount[]
+
+  createdAt DateTime @default(now())
+}
+
+enum PayFrequency {
+  WEEKLY
+  BIWEEKLY
+  SEMI_MONTHLY
+  MONTHLY
+}
+
+model PayAccount {
+  id        String  @id @default(cuid())
+  name      String
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  paySettings      PaySettings?
+  overtimeRule     OvertimeRule?
+  payPeriodEntries PayPeriodEntry[]
+  extraIncomeItems ExtraIncomeItem[]
+  taxSettings      TaxSettings?
+  expenseItems     ExpenseItem[]
+  expenseCategories ExpenseCategory[]
+  savingsItems     SavingsItem[]
+  monthlySnapshots MonthlySnapshot[]
+
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Income & Hours
+// ---------------------------------------------------------------------------
+
+model PaySettings {
+  id                  String       @id @default(cuid())
+  payAccountId        String       @unique
+  payAccount          PayAccount   @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  hourlyRate          Decimal      @db.Decimal(10, 2)
+  defaultHoursPerWeek Decimal      @db.Decimal(6, 2)
+  payFrequency        PayFrequency @default(BIWEEKLY)
+}
+
+model OvertimeRule {
+  id             String     @id @default(cuid())
+  payAccountId   String     @unique
+  payAccount     PayAccount @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  thresholdHours Decimal    @default(40) @db.Decimal(6, 2)
+  multiplier     Decimal    @default(1.5) @db.Decimal(4, 2)
+
+  tiers OvertimeTier[]
+}
+
+// Additional pay tiers above the base overtime rule, e.g. double-time past 60 hrs.
+model OvertimeTier {
+  id             String       @id @default(cuid())
+  overtimeRuleId String
+  overtimeRule   OvertimeRule @relation(fields: [overtimeRuleId], references: [id], onDelete: Cascade)
+  thresholdHours Decimal      @db.Decimal(6, 2)
+  multiplier     Decimal      @db.Decimal(4, 2)
+}
+
+model PayPeriodEntry {
+  id           String     @id @default(cuid())
+  payAccountId String
+  payAccount   PayAccount @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  periodStart  DateTime
+  periodEnd    DateTime
+  hoursWorked  Decimal    @db.Decimal(6, 2)
+
+  createdAt DateTime @default(now())
+
+  @@index([payAccountId, periodStart])
+}
+
+// One-off income not tied to hours worked — bonuses, reimbursements, etc.
+model ExtraIncomeItem {
+  id           String     @id @default(cuid())
+  payAccountId String
+  payAccount   PayAccount @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  name         String
+  amount       Decimal    @db.Decimal(10, 2)
+  date         DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([payAccountId, date])
+}
+
+// ---------------------------------------------------------------------------
+// Taxes
+// ---------------------------------------------------------------------------
+
+model TaxSettings {
+  id           String     @id @default(cuid())
+  payAccountId String     @unique
+  payAccount   PayAccount @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  state        String // two-letter state code, e.g. "CA"
+  city         String?
+}
+
+// ---------------------------------------------------------------------------
+// Expenses & Savings
+// ---------------------------------------------------------------------------
+
+enum RecurrenceFrequency {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  SEMI_MONTHLY
+  MONTHLY
+  YEARLY
+  PER_PAYCHECK
+}
+
+// Preset categories (payAccountId = null) are shared/seeded once; custom
+// categories are scoped to the PayAccount that created them.
+model ExpenseCategory {
+  id           String      @id @default(cuid())
+  name         String
+  isPreset     Boolean     @default(false)
+  payAccountId String?
+  payAccount   PayAccount? @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+
+  expenseItems ExpenseItem[]
+
+  @@unique([payAccountId, name])
+}
+
+model ExpenseItem {
+  id           String              @id @default(cuid())
+  payAccountId String
+  payAccount   PayAccount          @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  name         String
+  amount       Decimal             @db.Decimal(10, 2)
+  frequency    RecurrenceFrequency
+  categoryId   String
+  category     ExpenseCategory     @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum SavingsAmountType {
+  FLAT
+  PERCENT_OF_GROSS
+}
+
+model SavingsItem {
+  id           String              @id @default(cuid())
+  payAccountId String
+  payAccount   PayAccount          @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  name         String
+  amountType   SavingsAmountType
+  flatAmount   Decimal?            @db.Decimal(10, 2)
+  percent      Decimal?            @db.Decimal(5, 2)
+  frequency    RecurrenceFrequency
+
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// History & Trends
+// ---------------------------------------------------------------------------
+
+model MonthlySnapshot {
+  id           String     @id @default(cuid())
+  payAccountId String
+  payAccount   PayAccount @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  year         Int
+  month        Int // 1-12
+
+  grossIncome    Decimal @db.Decimal(12, 2)
+  estimatedTaxes Decimal @db.Decimal(12, 2)
+  netIncome      Decimal @db.Decimal(12, 2)
+  totalExpenses  Decimal @db.Decimal(12, 2)
+  totalSavings   Decimal @db.Decimal(12, 2)
+  leftOver       Decimal @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+
+  @@unique([payAccountId, year, month])
+}

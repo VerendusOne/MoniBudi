@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
+/* Light palette (default) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f7f8;
+  --foreground: #0b1f24;
+  --card: #ffffff;
+  --card-foreground: #0b1f24;
+  --muted: #eef2f3;
+  --muted-foreground: #5b6b6e;
+  --border: #dbe4e6;
+  --accent: #0891b2;
+  --accent-foreground: #ffffff;
+  --accent-glow: rgba(8, 145, 178, 0.35);
+  --radius-card: 1rem;
+}
+
+/* Dark palette — matches the navy/teal reference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #071a1f;
+    --foreground: #e6f4f3;
+    --card: #0d2830;
+    --card-foreground: #e6f4f3;
+    --muted: #10333c;
+    --muted-foreground: #7fa3a8;
+    --border: #163b43;
+    --accent: #2dd8c8;
+    --accent-foreground: #04211f;
+    --accent-glow: rgba(45, 216, 200, 0.45);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Accent-only glow, per SPEC.md section 7 — reserved for primary buttons,
+   active toggles, and headline numbers, never applied broadly. */
+.glow-accent {
+  box-shadow: 0 0 24px 0 var(--accent-glow);
 }
