@@ -29,10 +29,11 @@ import { US_STATES } from "@/lib/data/stateTax";
 import { formatCurrency } from "@/lib/format";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
-import { Toggle } from "@/components/Toggle";
 import { SubmitButton } from "@/components/SubmitButton";
 import { TabsShell } from "@/components/dashboard/TabsShell";
 import { DangerZone } from "@/components/dashboard/DangerZone";
+import { PaySettingsForm } from "@/components/dashboard/PaySettingsForm";
+import { OvertimeRuleForm } from "@/components/dashboard/OvertimeRuleForm";
 import { deletePayAccount } from "@/lib/actions/payAccounts";
 import { PayPeriodEntryRow } from "@/components/dashboard/PayPeriodEntryRow";
 import { ExtraIncomeRow } from "@/components/dashboard/ExtraIncomeRow";
@@ -202,129 +203,37 @@ export default async function PayAccountPage({
       {/* Pay Settings */}
       <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
         <h2 className="font-medium">Pay Settings</h2>
-        <form action={boundUpsertPaySettings} className="flex flex-col gap-3">
-          <label className="text-sm text-muted-foreground">
-            Hourly rate
-            <Input
-              name="hourlyRate"
-              type="number"
-              step="0.01"
-              min="0"
-              required
-              defaultValue={paySettings ? Number(paySettings.hourlyRate) : ""}
-              className="mt-1"
-            />
-          </label>
-          <label className="text-sm text-muted-foreground">
-            Default hours per week
-            <Input
-              name="defaultHoursPerWeek"
-              type="number"
-              step="0.5"
-              min="0"
-              required
-              defaultValue={
-                paySettings ? Number(paySettings.defaultHoursPerWeek) : ""
-              }
-              className="mt-1"
-            />
-          </label>
-          <label className="text-sm text-muted-foreground">
-            Pay frequency
-            <Select
-              name="payFrequency"
-              defaultValue={paySettings?.payFrequency ?? "BIWEEKLY"}
-              className="mt-1"
-            >
-              <option value="WEEKLY">Weekly</option>
-              <option value="BIWEEKLY">Biweekly</option>
-              <option value="SEMI_MONTHLY">Semi-monthly</option>
-              <option value="MONTHLY">Monthly</option>
-            </Select>
-          </label>
-          <SubmitButton className="self-start">
-            Save Pay Settings
-          </SubmitButton>
-        </form>
+        <PaySettingsForm
+          paySettings={
+            paySettings
+              ? {
+                  hourlyRate: Number(paySettings.hourlyRate),
+                  defaultHoursPerWeek: Number(paySettings.defaultHoursPerWeek),
+                  payFrequency: paySettings.payFrequency,
+                }
+              : null
+          }
+          onSave={boundUpsertPaySettings}
+        />
       </section>
 
       {/* Overtime Rule */}
       <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
         <h2 className="font-medium">Overtime Rule</h2>
-        <form action={boundUpsertOvertimeRule} className="flex flex-col gap-3">
-          <Toggle
-            name="enabled"
-            defaultChecked={!!overtimeRule}
-            label="Apply overtime rules to this job"
-          />
-          <label className="text-sm text-muted-foreground">
-            Overtime starts after this many hours in a week
-            <Input
-              name="thresholdHours"
-              type="number"
-              step="0.5"
-              min="0"
-              defaultValue={overtimeRule ? Number(overtimeRule.thresholdHours) : 40}
-              className="mt-1"
-            />
-            <span className="block text-xs mt-1">
-              e.g. 40 — work 40 hours or fewer and every hour is paid at your
-              normal rate.
-            </span>
-          </label>
-          <label className="text-sm text-muted-foreground">
-            Overtime pay rate
-            <Input
-              name="multiplier"
-              type="number"
-              step="0.1"
-              min="1"
-              defaultValue={overtimeRule ? Number(overtimeRule.multiplier) : 1.5}
-              className="mt-1"
-            />
-            <span className="block text-xs mt-1">
-              e.g. 1.5 = &quot;time-and-a-half.&quot; Hours past the threshold
-              above get paid at your hourly rate × this number.
-            </span>
-          </label>
-          <p className="text-xs text-muted-foreground pt-1">
-            Optional: a second, higher tier for extreme hours (e.g. double-time
-            after 60 hrs/week). Leave blank if this doesn&apos;t apply to you.
-          </p>
-          <div className="flex gap-3">
-            <label className="text-sm text-muted-foreground flex-1">
-              Second tier starts after
-              <Input
-                name="tier2ThresholdHours"
-                type="number"
-                step="0.5"
-                min="0"
-                defaultValue={tier2 ? Number(tier2.thresholdHours) : ""}
-                className="mt-1"
-              />
-              <span className="block text-xs mt-1">
-                Hours per week, e.g. 60.
-              </span>
-            </label>
-            <label className="text-sm text-muted-foreground flex-1">
-              Second tier pay rate
-              <Input
-                name="tier2Multiplier"
-                type="number"
-                step="0.1"
-                min="1"
-                defaultValue={tier2 ? Number(tier2.multiplier) : ""}
-                className="mt-1"
-              />
-              <span className="block text-xs mt-1">
-                e.g. 2.0 = double-time.
-              </span>
-            </label>
-          </div>
-          <SubmitButton className="self-start">
-            Save Overtime Rule
-          </SubmitButton>
-        </form>
+        <OvertimeRuleForm
+          overtimeRule={
+            overtimeRule
+              ? {
+                  thresholdHours: Number(overtimeRule.thresholdHours),
+                  multiplier: Number(overtimeRule.multiplier),
+                }
+              : null
+          }
+          tier2={
+            tier2 ? { thresholdHours: Number(tier2.thresholdHours), multiplier: Number(tier2.multiplier) } : null
+          }
+          onSave={boundUpsertOvertimeRule}
+        />
       </section>
 
       {/* Pay Period Entries */}
