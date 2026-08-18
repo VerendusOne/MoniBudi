@@ -9,11 +9,14 @@ export default async function DashboardLayout({
 }) {
   const session = await auth();
 
-  const profiles = await prisma.profile.findMany({
-    where: { userId: session!.user!.id },
-    include: { payAccounts: { orderBy: { createdAt: "asc" }, select: { id: true, name: true } } },
-    orderBy: { createdAt: "asc" },
-  });
+  const [profiles, user] = await Promise.all([
+    prisma.profile.findMany({
+      where: { userId: session!.user!.id },
+      include: { payAccounts: { orderBy: { createdAt: "asc" }, select: { id: true, name: true } } },
+      orderBy: { createdAt: "asc" },
+    }),
+    prisma.user.findUnique({ where: { id: session!.user!.id }, select: { email: true } }),
+  ]);
 
   const signOutForm = (
     <form
@@ -29,7 +32,7 @@ export default async function DashboardLayout({
   return (
     <DashboardShell
       profiles={profiles}
-      userEmail={session?.user?.email}
+      userEmail={user?.email}
       signOutForm={signOutForm}
     >
       {children}

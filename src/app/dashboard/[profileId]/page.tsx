@@ -1,6 +1,8 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { deleteProfile } from "@/lib/actions/profiles";
+import { DangerZone } from "@/components/dashboard/DangerZone";
 
 export default async function ProfilePage({
   params,
@@ -12,23 +14,41 @@ export default async function ProfilePage({
 
   const profile = await prisma.profile.findFirst({
     where: { id: profileId, userId: session!.user!.id },
-    include: { payAccounts: { orderBy: { createdAt: "asc" }, take: 1 } },
+    include: { payAccounts: { orderBy: { createdAt: "asc" } } },
   });
 
   if (!profile) notFound();
 
-  if (profile.payAccounts[0]) {
-    redirect(`/dashboard/${profile.id}/${profile.payAccounts[0].id}`);
-  }
-
   return (
-    <div className="h-full flex items-center justify-center text-center">
-      <div className="max-w-sm">
-        <h1 className="text-xl font-semibold mb-2">{profile.name}</h1>
-        <p className="text-muted-foreground text-sm">
-          No accounts yet. Add one from the sidebar to get started.
-        </p>
-      </div>
+    <div className="max-w-2xl flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold">{profile.name}</h1>
+
+      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-3">
+        <h2 className="font-medium">Jobs</h2>
+        <div className="flex flex-col gap-2">
+          {profile.payAccounts.map((account) => (
+            <a
+              key={account.id}
+              href={`/dashboard/${profile.id}/${account.id}`}
+              className="text-sm px-4 py-2.5 rounded-xl bg-background border border-border hover:border-accent transition-colors"
+            >
+              {account.name}
+            </a>
+          ))}
+          {profile.payAccounts.length === 0 && (
+            <p className="text-muted-foreground text-sm">
+              No jobs yet. Add one from the sidebar to get started.
+            </p>
+          )}
+        </div>
+      </section>
+
+      <DangerZone
+        label="profile"
+        itemName={profile.name}
+        onDelete={deleteProfile.bind(null, profile.id)}
+        redirectTo="/dashboard"
+      />
     </div>
   );
 }

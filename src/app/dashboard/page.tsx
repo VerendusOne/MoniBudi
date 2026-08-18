@@ -4,7 +4,7 @@ export default function DashboardPage() {
       <div className="max-w-sm">
         <h1 className="text-xl font-semibold mb-2">Welcome</h1>
         <p className="text-muted-foreground text-sm">
-          Select a profile and account from the sidebar, or create a new
+          Select a profile and job from the sidebar, or create a new
           profile to get started.
         </p>
       </div>

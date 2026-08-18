@@ -9,15 +9,15 @@
   --muted: #eef2f3;
   --muted-foreground: #5b6b6e;
   --border: #dbe4e6;
-  --accent: #0891b2;
+  --accent: #a9740d;
   --accent-foreground: #ffffff;
-  --accent-glow: rgba(8, 145, 178, 0.35);
+  --accent-glow: rgba(169, 116, 13, 0.3);
   --radius-card: 1rem;
 }
 
-/* Dark palette — matches the navy/teal reference */
+/* Dark palette, system preference — used when no explicit choice is set */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --background: #071a1f;
     --foreground: #e6f4f3;
     --card: #0d2830;
@@ -25,10 +25,24 @@
     --muted: #10333c;
     --muted-foreground: #7fa3a8;
     --border: #163b43;
-    --accent: #2dd8c8;
-    --accent-foreground: #04211f;
-    --accent-glow: rgba(45, 216, 200, 0.45);
+    --accent: #f2b84b;
+    --accent-foreground: #241a05;
+    --accent-glow: rgba(242, 184, 75, 0.45);
   }
+}
+
+/* Dark palette, explicit choice (via Settings) — wins in both directions */
+:root[data-theme="dark"] {
+  --background: #071a1f;
+  --foreground: #e6f4f3;
+  --card: #0d2830;
+  --card-foreground: #e6f4f3;
+  --muted: #10333c;
+  --muted-foreground: #7fa3a8;
+  --border: #163b43;
+  --accent: #f2b84b;
+  --accent-foreground: #241a05;
+  --accent-glow: rgba(242, 184, 75, 0.45);
 }
 
 @theme inline {

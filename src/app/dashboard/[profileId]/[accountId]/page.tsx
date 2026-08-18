@@ -32,6 +32,8 @@ import { Select } from "@/components/Select";
 import { Toggle } from "@/components/Toggle";
 import { SubmitButton } from "@/components/SubmitButton";
 import { TabsShell } from "@/components/dashboard/TabsShell";
+import { DangerZone } from "@/components/dashboard/DangerZone";
+import { deletePayAccount } from "@/lib/actions/payAccounts";
 import { PayPeriodEntryRow } from "@/components/dashboard/PayPeriodEntryRow";
 import { ExtraIncomeRow } from "@/components/dashboard/ExtraIncomeRow";
 import { ExpenseItemRow, FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
@@ -252,7 +254,7 @@ export default async function PayAccountPage({
           <Toggle
             name="enabled"
             defaultChecked={!!overtimeRule}
-            label="Apply overtime rules to this account"
+            label="Apply overtime rules to this job"
           />
           <label className="text-sm text-muted-foreground">
             Overtime starts after this many hours in a week
@@ -698,7 +700,7 @@ export default async function PayAccountPage({
       <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-2">
         <h2 className="font-medium">History</h2>
         <p className="text-xs text-muted-foreground -mt-1 mb-2">
-          A snapshot of this account&apos;s numbers is saved automatically
+          A snapshot of this job&apos;s numbers is saved automatically
           each month. The bar shows left-over relative to the biggest month
           in view; ▲/▼ compares to the month before it.
         </p>
@@ -734,6 +736,15 @@ export default async function PayAccountPage({
           { key: "history", label: "History", content: historyTab },
         ]}
       />
+
+      <div className="max-w-2xl">
+        <DangerZone
+          label="job"
+          itemName={account.name}
+          onDelete={deletePayAccount.bind(null, profileId, accountId)}
+          redirectTo={`/dashboard/${profileId}`}
+        />
+      </div>
     </div>
   );
 }
