@@ -15,7 +15,7 @@ export default async function DashboardLayout({
       include: { payAccounts: { orderBy: { createdAt: "asc" }, select: { id: true, name: true } } },
       orderBy: { createdAt: "asc" },
     }),
-    prisma.user.findUnique({ where: { id: session!.user!.id }, select: { email: true } }),
+    prisma.user.findUnique({ where: { id: session!.user!.id }, select: { name: true, email: true } }),
   ]);
 
   const signOutForm = (
@@ -25,13 +25,16 @@ export default async function DashboardLayout({
         await signOut({ redirectTo: "/" });
       }}
     >
-      <button className="hover:text-accent transition-colors">Sign out</button>
+      <button className="w-full px-4 py-2.5 rounded-full text-sm font-medium border border-border hover:border-accent hover:text-accent transition-colors">
+        Sign out
+      </button>
     </form>
   );
 
   return (
     <DashboardShell
       profiles={profiles}
+      userName={user?.name}
       userEmail={user?.email}
       signOutForm={signOutForm}
     >
