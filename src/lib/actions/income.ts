@@ -96,11 +96,14 @@ export async function createPayPeriodEntry(
   const periodStart = parseDateInput(String(formData.get("periodStart")));
   const periodEnd = parseDateInput(String(formData.get("periodEnd")));
   const hoursWorked = num(formData, "hoursWorked");
+  const hoursWorkedWeek2 = formData.get("hoursWorkedWeek2")
+    ? num(formData, "hoursWorkedWeek2")
+    : null;
 
   if (isNaN(periodStart.getTime()) || isNaN(periodEnd.getTime())) return;
 
   await prisma.payPeriodEntry.create({
-    data: { payAccountId, periodStart, periodEnd, hoursWorked },
+    data: { payAccountId, periodStart, periodEnd, hoursWorked, hoursWorkedWeek2 },
   });
 
   revalidatePath(`/dashboard/${profileId}/${payAccountId}`);
@@ -117,12 +120,15 @@ export async function updatePayPeriodEntry(
   const periodStart = parseDateInput(String(formData.get("periodStart")));
   const periodEnd = parseDateInput(String(formData.get("periodEnd")));
   const hoursWorked = num(formData, "hoursWorked");
+  const hoursWorkedWeek2 = formData.get("hoursWorkedWeek2")
+    ? num(formData, "hoursWorkedWeek2")
+    : null;
 
   if (isNaN(periodStart.getTime()) || isNaN(periodEnd.getTime())) return;
 
   await prisma.payPeriodEntry.updateMany({
     where: { id: entryId, payAccountId },
-    data: { periodStart, periodEnd, hoursWorked },
+    data: { periodStart, periodEnd, hoursWorked, hoursWorkedWeek2 },
   });
 
   revalidatePath(`/dashboard/${profileId}/${payAccountId}`);

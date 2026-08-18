@@ -80,7 +80,33 @@ export type PayPeriodEntryInput = {
   periodStart: Date;
   periodEnd: Date;
   hoursWorked: number;
+  /** Week 2 hours for a BIWEEKLY entry — see computeEntryGross. */
+  hoursWorkedWeek2?: number | null;
 };
+
+/**
+ * Gross pay for one logged pay period. For BIWEEKLY entries with a week 2
+ * value, overtime is computed separately for each week and summed — this
+ * matches how overtime actually works (FLSA is per-workweek, not per pay
+ * period), so a heavy week 1 can't be masked by a light week 2. Other
+ * frequencies fall back to scaling the threshold across the whole period,
+ * which is an approximation (weeks don't divide evenly for semi-monthly/
+ * monthly, so true per-week accuracy isn't achievable there anyway).
+ */
+export function computeEntryGross(
+  entry: PayPeriodEntryInput,
+  frequency: PayFrequency,
+  hourlyRate: number,
+  overtimeRule: OvertimeRuleInput,
+): number {
+  if (frequency === "BIWEEKLY" && entry.hoursWorkedWeek2 != null) {
+    return (
+      computeGrossForHours(entry.hoursWorked, 1, hourlyRate, overtimeRule) +
+      computeGrossForHours(entry.hoursWorkedWeek2, 1, hourlyRate, overtimeRule)
+    );
+  }
+  return computeGrossForHours(entry.hoursWorked, weeksInPeriod(frequency), hourlyRate, overtimeRule);
+}
 
 export type MonthlyGrossResult = {
   amount: number;
@@ -138,7 +164,6 @@ export function computeMonthlyGross(
     return { amount: projectedMonthly, source: "projected", loggedDays: 0, totalDays };
   }
 
-  const periodWeeks = weeksInPeriod(frequency);
   let loggedGross = 0;
   let loggedDays = 0;
 
@@ -146,7 +171,7 @@ export function computeMonthlyGross(
     const entryTotalDays =
       Math.round((entry.periodEnd.getTime() - entry.periodStart.getTime()) / MS_PER_DAY) + 1;
     const overlap = overlapDays(entry.periodStart, entry.periodEnd, monthStart, monthEnd);
-    const entryGross = computeGrossForHours(entry.hoursWorked, periodWeeks, hourlyRate, overtimeRule);
+    const entryGross = computeEntryGross(entry, frequency, hourlyRate, overtimeRule);
 
     loggedGross += entryGross * (overlap / entryTotalDays);
     loggedDays += overlap;

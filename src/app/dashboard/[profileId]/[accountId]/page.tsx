@@ -85,6 +85,7 @@ export default async function PayAccountPage({
           periodStart: e.periodStart,
           periodEnd: e.periodEnd,
           hoursWorked: Number(e.hoursWorked),
+          hoursWorkedWeek2: e.hoursWorkedWeek2 ? Number(e.hoursWorkedWeek2) : null,
         })),
         paySettings.payFrequency,
         Number(paySettings.defaultHoursPerWeek),
@@ -332,6 +333,12 @@ export default async function PayAccountPage({
         <p className="text-xs text-muted-foreground -mt-2">
           Days covered by a logged period use its actual pay; the rest of
           the month still uses your projected average.
+          {paySettings?.payFrequency === "BIWEEKLY"
+            ? " Overtime is calculated separately for each week, since that's how it actually works."
+            : paySettings?.payFrequency === "SEMI_MONTHLY" ||
+                paySettings?.payFrequency === "MONTHLY"
+              ? " Overtime on periods this long is an approximation — true weekly overtime needs whole weeks to calculate exactly."
+              : ""}
         </p>
 
         <div className="flex flex-col gap-2">
@@ -343,7 +350,9 @@ export default async function PayAccountPage({
                 periodStart: entry.periodStart,
                 periodEnd: entry.periodEnd,
                 hoursWorked: Number(entry.hoursWorked),
+                hoursWorkedWeek2: entry.hoursWorkedWeek2 ? Number(entry.hoursWorkedWeek2) : null,
               }}
+              isBiweekly={paySettings?.payFrequency === "BIWEEKLY"}
               onUpdate={updatePayPeriodEntry.bind(null, profileId, accountId, entry.id)}
               onDelete={deletePayPeriodEntry.bind(null, profileId, accountId, entry.id)}
             />
@@ -366,17 +375,44 @@ export default async function PayAccountPage({
               <Input name="periodEnd" type="date" required className="mt-1" />
             </label>
           </div>
-          <label className="text-sm text-muted-foreground">
-            Hours worked
-            <Input
-              name="hoursWorked"
-              type="number"
-              step="0.25"
-              min="0"
-              required
-              className="mt-1"
-            />
-          </label>
+          {paySettings?.payFrequency === "BIWEEKLY" ? (
+            <div className="flex gap-3">
+              <label className="text-sm text-muted-foreground flex-1">
+                Week 1 hours
+                <Input
+                  name="hoursWorked"
+                  type="number"
+                  step="0.25"
+                  min="0"
+                  required
+                  className="mt-1"
+                />
+              </label>
+              <label className="text-sm text-muted-foreground flex-1">
+                Week 2 hours
+                <Input
+                  name="hoursWorkedWeek2"
+                  type="number"
+                  step="0.25"
+                  min="0"
+                  required
+                  className="mt-1"
+                />
+              </label>
+            </div>
+          ) : (
+            <label className="text-sm text-muted-foreground">
+              Hours worked
+              <Input
+                name="hoursWorked"
+                type="number"
+                step="0.25"
+                min="0"
+                required
+                className="mt-1"
+              />
+            </label>
+          )}
           <SubmitButton className="self-start">
             Log Pay Period
           </SubmitButton>

@@ -10,14 +10,17 @@ type Entry = {
   periodStart: Date;
   periodEnd: Date;
   hoursWorked: number;
+  hoursWorkedWeek2: number | null;
 };
 
 export function PayPeriodEntryRow({
   entry,
+  isBiweekly,
   onUpdate,
   onDelete,
 }: {
   entry: Entry;
+  isBiweekly: boolean;
   onUpdate: (formData: FormData) => Promise<void>;
   onDelete: () => Promise<void>;
 }) {
@@ -30,7 +33,7 @@ export function PayPeriodEntryRow({
           await onUpdate(formData);
           setEditing(false);
         }}
-        className="flex items-center gap-2 bg-background border border-border rounded-xl px-4 py-2"
+        className="flex flex-wrap items-center gap-2 bg-background border border-border rounded-xl px-4 py-2"
       >
         <Input
           name="periodStart"
@@ -46,15 +49,40 @@ export function PayPeriodEntryRow({
           defaultValue={toDateInputValue(entry.periodEnd)}
           className="py-1"
         />
-        <Input
-          name="hoursWorked"
-          type="number"
-          step="0.25"
-          min="0"
-          required
-          defaultValue={entry.hoursWorked}
-          className="py-1 w-24"
-        />
+        {isBiweekly ? (
+          <>
+            <Input
+              name="hoursWorked"
+              type="number"
+              step="0.25"
+              min="0"
+              required
+              defaultValue={entry.hoursWorked}
+              placeholder="Week 1"
+              className="py-1 w-24"
+            />
+            <Input
+              name="hoursWorkedWeek2"
+              type="number"
+              step="0.25"
+              min="0"
+              required
+              defaultValue={entry.hoursWorkedWeek2 ?? ""}
+              placeholder="Week 2"
+              className="py-1 w-24"
+            />
+          </>
+        ) : (
+          <Input
+            name="hoursWorked"
+            type="number"
+            step="0.25"
+            min="0"
+            required
+            defaultValue={entry.hoursWorked}
+            className="py-1 w-24"
+          />
+        )}
         <SubmitButton className="px-3 py-1 text-xs shrink-0" pendingLabel="Saving…">
           Save
         </SubmitButton>
@@ -74,7 +102,11 @@ export function PayPeriodEntryRow({
       <span>
         {formatDate(entry.periodStart)} – {formatDate(entry.periodEnd)}
       </span>
-      <span className="text-muted-foreground">{entry.hoursWorked} hrs</span>
+      <span className="text-muted-foreground">
+        {entry.hoursWorkedWeek2 != null
+          ? `${entry.hoursWorked} + ${entry.hoursWorkedWeek2} hrs`
+          : `${entry.hoursWorked} hrs`}
+      </span>
       <div className="flex items-center gap-3">
         <button
           onClick={() => setEditing(true)}

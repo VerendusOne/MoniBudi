@@ -147,6 +147,10 @@ model PayPeriodEntry {
   periodStart  DateTime
   periodEnd    DateTime
   hoursWorked  Decimal    @db.Decimal(6, 2)
+  // Only used for BIWEEKLY entries, so overtime can be computed correctly
+  // per workweek (per FLSA) rather than averaged across the whole period.
+  // hoursWorked holds week 1 in that case, this field holds week 2.
+  hoursWorkedWeek2 Decimal? @db.Decimal(6, 2)
 
   createdAt DateTime @default(now())
 
