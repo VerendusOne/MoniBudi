@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/Input";
-import { Button } from "@/components/Button";
+import { SubmitButton } from "@/components/SubmitButton";
 import { formatCurrency, formatDate, toDateInputValue } from "@/lib/format";
 
 type Item = {
@@ -49,9 +49,9 @@ export function ExtraIncomeRow({
           defaultValue={toDateInputValue(item.date)}
           className="py-1"
         />
-        <Button type="submit" className="px-3 py-1 text-xs shrink-0">
+        <SubmitButton className="px-3 py-1 text-xs shrink-0" pendingLabel="Saving…">
           Save
-        </Button>
+        </SubmitButton>
         <button
           type="button"
           onClick={() => setEditing(false)}

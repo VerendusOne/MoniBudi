@@ -27,9 +27,10 @@ import { normalizeToMonthly, computeSavingsMonthly } from "@/lib/calculations/ex
 import { saveCurrentMonthSnapshot } from "@/lib/history";
 import { US_STATES } from "@/lib/data/stateTax";
 import { formatCurrency } from "@/lib/format";
-import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
+import { Toggle } from "@/components/Toggle";
+import { SubmitButton } from "@/components/SubmitButton";
 import { TabsShell } from "@/components/dashboard/TabsShell";
 import { PayPeriodEntryRow } from "@/components/dashboard/PayPeriodEntryRow";
 import { ExtraIncomeRow } from "@/components/dashboard/ExtraIncomeRow";
@@ -238,9 +239,9 @@ export default async function PayAccountPage({
               <option value="MONTHLY">Monthly</option>
             </Select>
           </label>
-          <Button type="submit" className="self-start">
+          <SubmitButton className="self-start">
             Save Pay Settings
-          </Button>
+          </SubmitButton>
         </form>
       </section>
 
@@ -248,15 +249,11 @@ export default async function PayAccountPage({
       <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
         <h2 className="font-medium">Overtime Rule</h2>
         <form action={boundUpsertOvertimeRule} className="flex flex-col gap-3">
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              name="enabled"
-              defaultChecked={!!overtimeRule}
-              className="accent-accent"
-            />
-            Apply overtime rules to this account
-          </label>
+          <Toggle
+            name="enabled"
+            defaultChecked={!!overtimeRule}
+            label="Apply overtime rules to this account"
+          />
           <label className="text-sm text-muted-foreground">
             Overtime starts after this many hours in a week
             <Input
@@ -321,9 +318,9 @@ export default async function PayAccountPage({
               </span>
             </label>
           </div>
-          <Button type="submit" className="self-start">
+          <SubmitButton className="self-start">
             Save Overtime Rule
-          </Button>
+          </SubmitButton>
         </form>
       </section>
 
@@ -378,9 +375,9 @@ export default async function PayAccountPage({
               className="mt-1"
             />
           </label>
-          <Button type="submit" className="self-start">
+          <SubmitButton className="self-start">
             Log Pay Period
-          </Button>
+          </SubmitButton>
         </form>
       </section>
 
@@ -441,9 +438,9 @@ export default async function PayAccountPage({
               <Input name="date" type="date" required className="mt-1" />
             </label>
           </div>
-          <Button type="submit" className="self-start">
+          <SubmitButton className="self-start">
             Add Extra Income
-          </Button>
+          </SubmitButton>
         </form>
       </section>
 

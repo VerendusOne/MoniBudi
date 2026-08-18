@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
-import { Button } from "@/components/Button";
+import { SubmitButton } from "@/components/SubmitButton";
 import { formatCurrency } from "@/lib/format";
 
 type Category = { id: string; name: string };
@@ -81,9 +81,9 @@ export function ExpenseItemRow({
             </option>
           ))}
         </Select>
-        <Button type="submit" className="px-3 py-1 text-xs shrink-0">
+        <SubmitButton className="px-3 py-1 text-xs shrink-0" pendingLabel="Saving…">
           Save
-        </Button>
+        </SubmitButton>
         <button
           type="button"
           onClick={() => setEditing(false)}

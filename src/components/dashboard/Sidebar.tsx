@@ -11,14 +11,20 @@ type SidebarProfile = {
   payAccounts: { id: string; name: string }[];
 };
 
-export function Sidebar({ profiles }: { profiles: SidebarProfile[] }) {
+export function Sidebar({
+  profiles,
+  onNavigate,
+}: {
+  profiles: SidebarProfile[];
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [newAccountFor, setNewAccountFor] = useState<string | null>(null);
   const [addingProfile, setAddingProfile] = useState(false);
 
   return (
-    <nav className="w-64 shrink-0 border-r border-border p-4 flex flex-col gap-5 overflow-y-auto">
+    <nav className="w-64 h-full shrink-0 border-r border-border bg-background p-4 flex flex-col gap-5 overflow-y-auto">
       {profiles.map((profile) => {
         const isActiveProfile = pathname.startsWith(`/dashboard/${profile.id}`);
         return (
@@ -26,6 +32,7 @@ export function Sidebar({ profiles }: { profiles: SidebarProfile[] }) {
             <div className="flex items-center justify-between group">
               <a
                 href={`/dashboard/${profile.id}`}
+                onClick={onNavigate}
                 className={`text-sm font-semibold ${
                   isActiveProfile ? "text-accent" : "text-foreground"
                 }`}
@@ -53,6 +60,7 @@ export function Sidebar({ profiles }: { profiles: SidebarProfile[] }) {
                   <div key={account.id} className="flex items-center justify-between group">
                     <a
                       href={`/dashboard/${profile.id}/${account.id}`}
+                      onClick={onNavigate}
                       className={`flex-1 text-sm px-2 py-1.5 rounded-lg transition-colors ${
                         isActiveAccount
                           ? "bg-accent/10 text-accent"

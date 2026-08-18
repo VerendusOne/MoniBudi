@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, ReactNode } from "react";
-import { Button } from "@/components/Button";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export function ExpandableAdd({
   label,
@@ -35,7 +35,7 @@ export function ExpandableAdd({
     >
       {children}
       <div className="flex gap-3 items-center">
-        <Button type="submit">Save</Button>
+        <SubmitButton>Save</SubmitButton>
         <button
           type="button"
           onClick={() => setOpen(false)}

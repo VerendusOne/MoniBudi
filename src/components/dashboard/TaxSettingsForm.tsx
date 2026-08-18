@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
-import { Button } from "@/components/Button";
+import { SubmitButton } from "@/components/SubmitButton";
 
 type State = { code: string; name: string };
 
@@ -64,7 +64,7 @@ export function TaxSettingsForm({
         <Input name="city" defaultValue={city ?? ""} placeholder="e.g. New York" className="mt-1" />
       </label>
       <div className="flex gap-3 items-center">
-        <Button type="submit">Save</Button>
+        <SubmitButton>Save</SubmitButton>
         {state && (
           <button
             type="button"

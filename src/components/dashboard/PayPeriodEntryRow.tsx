@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/Input";
-import { Button } from "@/components/Button";
+import { SubmitButton } from "@/components/SubmitButton";
 import { formatDate, toDateInputValue } from "@/lib/format";
 
 type Entry = {
@@ -55,9 +55,9 @@ export function PayPeriodEntryRow({
           defaultValue={entry.hoursWorked}
           className="py-1 w-24"
         />
-        <Button type="submit" className="px-3 py-1 text-xs shrink-0">
+        <SubmitButton className="px-3 py-1 text-xs shrink-0" pendingLabel="Saving…">
           Save
-        </Button>
+        </SubmitButton>
         <button
           type="button"
           onClick={() => setEditing(false)}
