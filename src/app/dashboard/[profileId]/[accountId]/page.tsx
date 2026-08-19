@@ -187,7 +187,7 @@ export default async function PayAccountPage({
           <p className="label-caps text-muted-foreground mb-2">
             Left over this month
           </p>
-          <p className="text-7xl font-bold tracking-tight tabular-nums text-accent drop-shadow-[0_0_36px_var(--accent)]">
+          <p className="text-7xl font-bold tracking-tight tabular-nums text-foreground drop-shadow-[0_0_36px_var(--accent)]">
             {formatCurrency(leftOver)}
           </p>
           <p className="text-xs text-muted-foreground mt-3">
