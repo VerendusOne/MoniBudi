@@ -177,14 +177,20 @@ export default async function PayAccountPage({
   const homeTab = (
     <div className="max-w-2xl flex flex-col gap-6">
       {monthlyGross && (
-        <div className="bg-card border border-border/60 rounded-3xl card-shadow p-8 text-center">
+        <div className="relative text-center py-8">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
+          >
+            <div className="h-56 w-56 rounded-full bg-accent/35 blur-[64px]" />
+          </div>
           <p className="label-caps text-muted-foreground mb-2">
             Left over this month
           </p>
-          <p className="text-6xl font-bold tracking-tight tabular-nums text-accent">
+          <p className="text-7xl font-bold tracking-tight tabular-nums text-accent drop-shadow-[0_0_36px_var(--accent)]">
             {formatCurrency(leftOver)}
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="text-xs text-muted-foreground mt-3">
             {formatCurrency(monthlyGross.amount)} from pay
             {extraIncomeThisMonth > 0 &&
               ` + ${formatCurrency(extraIncomeThisMonth)} extra income`}
