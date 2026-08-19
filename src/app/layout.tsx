@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Budget App",
+  title: "MoniBudi",
   description: "Paycheck-first budgeting: hours, taxes, expenses, savings.",
 };
 

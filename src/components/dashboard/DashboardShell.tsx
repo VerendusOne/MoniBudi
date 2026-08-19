@@ -40,7 +40,7 @@ export function DashboardShell({
             </svg>
           </button>
           <a href="/dashboard" className="font-semibold">
-            Budget App
+            MoniBudi
           </a>
         </div>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">

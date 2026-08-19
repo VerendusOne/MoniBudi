@@ -1,4 +1,4 @@
-# Budget App — Product Spec
+# MoniBudi — Product Spec
 
 ## 1. Concept
 

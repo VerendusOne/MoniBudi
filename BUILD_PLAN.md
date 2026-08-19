@@ -1,4 +1,4 @@
-# Budget App — Build Plan
+# MoniBudi — Build Plan
 
 Companion to [SPEC.md](SPEC.md). Phases are ordered so each one produces
 something runnable/visible, and later phases depend only on earlier ones.

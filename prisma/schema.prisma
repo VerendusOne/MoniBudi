@@ -1,4 +1,4 @@
-// Prisma schema for Budget App
+// Prisma schema for MoniBudi
 // See SPEC.md section 5 for the conceptual data model this implements.
 
 generator client {
