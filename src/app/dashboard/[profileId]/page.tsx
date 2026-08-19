@@ -23,8 +23,8 @@ export default async function ProfilePage({
     <div className="max-w-2xl flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">{profile.name}</h1>
 
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-3">
-        <h2 className="font-medium">Jobs</h2>
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-3">
+        <h2 className="text-base font-semibold">Jobs</h2>
         <div className="flex flex-col gap-2">
           {profile.payAccounts.map((account) => (
             <a

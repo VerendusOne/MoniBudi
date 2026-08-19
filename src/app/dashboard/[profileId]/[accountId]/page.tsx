@@ -177,11 +177,11 @@ export default async function PayAccountPage({
   const homeTab = (
     <div className="max-w-2xl flex flex-col gap-6">
       {monthlyGross && (
-        <div className="bg-card border border-border rounded-2xl p-6 text-center">
-          <p className="text-sm text-muted-foreground mb-1">
+        <div className="bg-card border border-border/60 rounded-3xl card-shadow p-8 text-center">
+          <p className="label-caps text-muted-foreground mb-2">
             Left over this month
           </p>
-          <p className="text-4xl font-semibold glow-accent inline-block px-4 py-1 rounded-full text-accent">
+          <p className="text-6xl font-bold tracking-tight tabular-nums text-accent">
             {formatCurrency(leftOver)}
           </p>
           <p className="text-xs text-muted-foreground mt-2">
@@ -201,8 +201,8 @@ export default async function PayAccountPage({
       )}
 
       {/* Pay Settings */}
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="font-medium">Pay Settings</h2>
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+        <h2 className="text-base font-semibold">Pay Settings</h2>
         <PaySettingsForm
           paySettings={
             paySettings
@@ -218,8 +218,8 @@ export default async function PayAccountPage({
       </section>
 
       {/* Overtime Rule */}
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="font-medium">Overtime Rule</h2>
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+        <h2 className="text-base font-semibold">Overtime Rule</h2>
         <OvertimeRuleForm
           overtimeRule={
             overtimeRule
@@ -237,8 +237,8 @@ export default async function PayAccountPage({
       </section>
 
       {/* Pay Period Entries */}
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="font-medium">Logged Pay Periods</h2>
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+        <h2 className="text-base font-semibold">Logged Pay Periods</h2>
         <p className="text-xs text-muted-foreground -mt-2">
           Days covered by a logged period use its actual pay; the rest of
           the month still uses your projected average.
@@ -329,8 +329,8 @@ export default async function PayAccountPage({
       </section>
 
       {/* Extra Income */}
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="font-medium">Extra Income</h2>
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+        <h2 className="text-base font-semibold">Extra Income</h2>
         <p className="text-xs text-muted-foreground -mt-2">
           One-off money that isn&apos;t part of your regular pay — bonuses,
           insurance reimbursements, tax refunds, etc. Added on top of the
@@ -393,8 +393,8 @@ export default async function PayAccountPage({
 
       {/* Expenses & Savings summary */}
       {(expenseItemsMonthly.length > 0 || savingsItemsMonthly.length > 0) && (
-        <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-3">
-          <h2 className="font-medium">Expenses &amp; Savings This Month</h2>
+        <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-3">
+          <h2 className="text-base font-semibold">Expenses &amp; Savings This Month</h2>
           <p className="text-xs text-muted-foreground -mt-1">
             Manage individual items in the Expenses tab.
           </p>
@@ -415,8 +415,8 @@ export default async function PayAccountPage({
 
   const taxesTab = (
     <div className="max-w-2xl flex flex-col gap-6">
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="font-medium">Taxes</h2>
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+        <h2 className="text-base font-semibold">Taxes</h2>
 
         <TaxSettingsForm
           state={taxSettings?.state ?? null}
@@ -471,9 +471,9 @@ export default async function PayAccountPage({
   const expensesTab = (
     <div className="max-w-2xl flex flex-col gap-6">
       {/* Expenses */}
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-medium">Expenses</h2>
+          <h2 className="text-base font-semibold">Expenses</h2>
           <span className="text-sm text-muted-foreground">
             {formatCurrency(totalExpensesMonthly)}/mo
           </span>
@@ -553,9 +553,9 @@ export default async function PayAccountPage({
       </section>
 
       {/* Savings */}
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-medium">Savings</h2>
+          <h2 className="text-base font-semibold">Savings</h2>
           <span className="text-sm text-muted-foreground">
             {formatCurrency(totalSavingsMonthly)}/mo
           </span>
@@ -642,8 +642,8 @@ export default async function PayAccountPage({
 
   const historyTab = (
     <div className="max-w-2xl flex flex-col gap-6">
-      <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-2">
-        <h2 className="font-medium">History</h2>
+      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-2">
+        <h2 className="text-base font-semibold">History</h2>
         <p className="text-xs text-muted-foreground -mt-1 mb-2">
           A snapshot of this job&apos;s numbers is saved automatically
           each month. The bar shows left-over relative to the biggest month

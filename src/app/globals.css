@@ -12,6 +12,7 @@
   --accent: #0e9c74;
   --accent-foreground: #ffffff;
   --radius-card: 1rem;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 28px rgba(0, 0, 0, 0.06);
 }
 
 /* Dark palette, system preference — used when no explicit choice is set */
@@ -26,6 +27,7 @@
     --border: #2e2e2e;
     --accent: #22c99a;
     --accent-foreground: #052e22;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.45);
   }
 }
 
@@ -40,6 +42,7 @@
   --border: #2e2e2e;
   --accent: #22c99a;
   --accent-foreground: #052e22;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 @theme inline {
@@ -53,16 +56,37 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-inter);
+
+  /* Rounder, softer corners throughout — cards read more like the
+     app-store fintech reference (big radius, low-contrast borders). */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.375rem;
+  --radius-3xl: 1.75rem;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Glow effect retired per user feedback — class kept as a no-op so existing
    markup referencing it doesn't need to change. */
 .glow-accent {
   box-shadow: none;
+}
+
+/* Soft elevation for cards, in place of a hard border — matches the
+   reference's floating-card look. Border is kept, just faint. */
+.card-shadow {
+  box-shadow: var(--shadow-card);
+}
+
+/* Small uppercase caption, e.g. above a hero number ("LEFT OVER THIS MONTH"). */
+.label-caps {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }

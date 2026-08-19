@@ -53,7 +53,7 @@ export default function SignupPage() {
     <main className="flex-1 flex items-center justify-center p-8">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-card border border-border rounded-2xl p-8 flex flex-col gap-4"
+        className="w-full max-w-sm bg-card border border-border/60 rounded-2xl card-shadow p-8 flex flex-col gap-4"
       >
         <h1 className="text-xl font-semibold mb-2">Create your account</h1>
         <Input

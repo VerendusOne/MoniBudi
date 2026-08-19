@@ -43,22 +43,22 @@ export function SettingsPanel({
             </button>
           </div>
 
-          <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-            <h2 className="font-medium">Appearance</h2>
+          <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+            <h2 className="text-base font-semibold">Appearance</h2>
             <ThemeSelector />
           </section>
 
-          <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-            <h2 className="font-medium">Your Account</h2>
+          <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+            <h2 className="text-base font-semibold">Your Account</h2>
             <AccountForm name={name} email={email} />
           </section>
 
-          <section className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-            <h2 className="font-medium">Change Password</h2>
+          <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
+            <h2 className="text-base font-semibold">Change Password</h2>
             <PasswordForm />
           </section>
 
-          <section className="bg-card border border-border rounded-2xl p-6">
+          <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6">
             {signOutForm}
           </section>
 
