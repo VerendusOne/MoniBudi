@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { Input } from "@/components/Input";
 import { Toggle } from "@/components/Toggle";
-import { SubmitButton } from "@/components/SubmitButton";
+import { Button } from "@/components/Button";
 
 type OvertimeRule = { thresholdHours: number; multiplier: number } | null;
 type Tier2 = { thresholdHours: number; multiplier: number } | null;
@@ -17,9 +17,11 @@ export function OvertimeRuleForm({
   tier2: Tier2;
   onSave: (formData: FormData) => Promise<void>;
 }) {
-  // Controlled inputs for the same reason as PaySettingsForm — React resets
-  // uncontrolled <form action> fields to their pre-submit values once the
-  // action completes, which made this form visibly revert after saving.
+  // Controlled inputs submitted via onSubmit rather than the <form action>
+  // prop — see the comment in PaySettingsForm for why: React's built-in
+  // action-reset can silently revert a controlled field (select, checkbox)
+  // back to what the server originally rendered, bypassing React state,
+  // with no re-render to fix it. onSubmit avoids that reset path entirely.
   const [thresholdHours, setThresholdHours] = useState(
     overtimeRule ? String(overtimeRule.thresholdHours) : "40",
   );
@@ -28,9 +30,21 @@ export function OvertimeRuleForm({
     tier2 ? String(tier2.thresholdHours) : "",
   );
   const [tier2Multiplier, setTier2Multiplier] = useState(tier2 ? String(tier2.multiplier) : "");
+  const [pending, setPending] = useState(false);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    setPending(true);
+    try {
+      await onSave(formData);
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
-    <form action={onSave} className="flex flex-col gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <Toggle name="enabled" defaultChecked={!!overtimeRule} label="Apply overtime rules to this job" />
       <label className="text-sm text-muted-foreground">
         Overtime starts after this many hours in a week
@@ -95,7 +109,9 @@ export function OvertimeRuleForm({
           <span className="block text-xs mt-1">e.g. 2.0 = double-time.</span>
         </label>
       </div>
-      <SubmitButton className="self-start">Save Overtime Rule</SubmitButton>
+      <Button type="submit" disabled={pending} className="self-start">
+        {pending ? "Saving…" : "Save Overtime Rule"}
+      </Button>
     </form>
   );
 }

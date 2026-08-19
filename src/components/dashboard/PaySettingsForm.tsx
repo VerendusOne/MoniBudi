@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
-import { SubmitButton } from "@/components/SubmitButton";
+import { Button } from "@/components/Button";
 
 type PaySettings = {
   hourlyRate: number;
@@ -18,18 +18,33 @@ export function PaySettingsForm({
   paySettings: PaySettings;
   onSave: (formData: FormData) => Promise<void>;
 }) {
-  // Controlled inputs, deliberately not relying on defaultValue: React
-  // resets uncontrolled <form action> fields to their pre-submit values
-  // once the action completes (even on success), which made the form
-  // visibly "revert" right after a successful save.
+  // Controlled inputs, and submitted via onSubmit rather than the <form
+  // action> prop: React's built-in action-reset behavior resets a <select>
+  // to whatever option was marked `selected` in the ORIGINAL server-rendered
+  // HTML, at the DOM level, bypassing React's controlled `value` tracking
+  // entirely (no re-render follows to correct it) - so the dropdown could
+  // silently snap back to the pre-edit choice a moment after a successful
+  // save. Handling submission manually avoids that reset path altogether.
   const [hourlyRate, setHourlyRate] = useState(paySettings ? String(paySettings.hourlyRate) : "");
   const [defaultHoursPerWeek, setDefaultHoursPerWeek] = useState(
     paySettings ? String(paySettings.defaultHoursPerWeek) : "",
   );
   const [payFrequency, setPayFrequency] = useState(paySettings?.payFrequency ?? "BIWEEKLY");
+  const [pending, setPending] = useState(false);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    setPending(true);
+    try {
+      await onSave(formData);
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
-    <form action={onSave} className="flex flex-col gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <label className="text-sm text-muted-foreground">
         Hourly rate
         <Input
@@ -70,7 +85,9 @@ export function PaySettingsForm({
           <option value="MONTHLY">Monthly</option>
         </Select>
       </label>
-      <SubmitButton className="self-start">Save Pay Settings</SubmitButton>
+      <Button type="submit" disabled={pending} className="self-start">
+        {pending ? "Saving…" : "Save Pay Settings"}
+      </Button>
     </form>
   );
 }
