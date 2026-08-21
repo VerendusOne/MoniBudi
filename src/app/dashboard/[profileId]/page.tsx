@@ -20,7 +20,7 @@ export default async function ProfilePage({
   if (!profile) notFound();
 
   return (
-    <div className="max-w-2xl flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">{profile.name}</h1>
 
       <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-3">

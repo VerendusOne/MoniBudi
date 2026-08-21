@@ -175,7 +175,7 @@ export default async function PayAccountPage({
   const boundCreateSavingsItem = createSavingsItem.bind(null, profileId, accountId);
 
   const homeTab = (
-    <div className="max-w-2xl flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto flex flex-col gap-6">
       {monthlyGross && (
         <div className="relative text-center py-8">
           <div
@@ -420,7 +420,7 @@ export default async function PayAccountPage({
   );
 
   const taxesTab = (
-    <div className="max-w-2xl flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto flex flex-col gap-6">
       <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
         <h2 className="text-base font-semibold">Taxes</h2>
 
@@ -475,7 +475,7 @@ export default async function PayAccountPage({
   );
 
   const expensesTab = (
-    <div className="max-w-2xl flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto flex flex-col gap-6">
       {/* Expenses */}
       <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -647,7 +647,7 @@ export default async function PayAccountPage({
   );
 
   const historyTab = (
-    <div className="max-w-2xl flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto flex flex-col gap-6">
       <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-2">
         <h2 className="text-base font-semibold">History</h2>
         <p className="text-xs text-muted-foreground -mt-1 mb-2">
@@ -688,7 +688,7 @@ export default async function PayAccountPage({
         ]}
       />
 
-      <div className="max-w-2xl">
+      <div className="max-w-2xl mx-auto">
         <DangerZone
           label="job"
           itemName={account.name}
