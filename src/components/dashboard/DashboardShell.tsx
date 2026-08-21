@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, ReactNode } from "react";
+import Image from "next/image";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 
@@ -39,7 +40,8 @@ export function DashboardShell({
               <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <a href="/dashboard" className="font-semibold">
+          <a href="/dashboard" className="flex items-center gap-2 font-semibold">
+            <Image src="/logo.png" alt="" width={24} height={24} className="rounded-md" />
             MoniBudi
           </a>
         </div>
