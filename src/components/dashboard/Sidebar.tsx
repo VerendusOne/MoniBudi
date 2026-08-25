@@ -32,7 +32,7 @@ export function Sidebar({
             <a
               href={`/dashboard/${profile.id}`}
               onClick={onNavigate}
-              className={`text-sm font-semibold ${
+              className={`text-sm font-semibold rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                 isActiveProfile ? "text-accent" : "text-foreground"
               }`}
             >
@@ -47,7 +47,7 @@ export function Sidebar({
                     key={account.id}
                     href={`/dashboard/${profile.id}/${account.id}`}
                     onClick={onNavigate}
-                    className={`text-sm px-2 py-1.5 rounded-lg transition-colors ${
+                    className={`text-sm px-2 py-1.5 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                       isActiveAccount
                         ? "bg-accent/10 text-accent"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -71,16 +71,19 @@ export function Sidebar({
                     name="name"
                     autoFocus
                     placeholder="Job name"
-                    className="min-w-0 flex-1 px-2 py-1 text-sm rounded-lg bg-card border border-border focus:outline-none focus:border-accent"
+                    className="min-w-0 flex-1 px-2 py-1 text-sm rounded-lg bg-card border border-border transition-[border-color,box-shadow] duration-150 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/25"
                   />
-                  <button type="submit" className="text-xs text-accent px-1">
+                  <button
+                    type="submit"
+                    className="text-xs text-accent px-2 py-1 rounded-md transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.95] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  >
                     Add
                   </button>
                 </form>
               ) : (
                 <button
                   onClick={() => setNewAccountFor(profile.id)}
-                  className="text-left text-xs text-muted-foreground hover:text-accent px-2 py-1 transition-colors"
+                  className="text-left text-xs text-muted-foreground hover:text-accent px-2 py-1 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   + Add Job
                 </button>
@@ -113,7 +116,7 @@ export function Sidebar({
         ) : (
           <button
             onClick={() => setAddingProfile(true)}
-            className="text-sm text-muted-foreground hover:text-accent transition-colors"
+            className="text-sm text-muted-foreground hover:text-accent px-1 py-0.5 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             + New Profile
           </button>

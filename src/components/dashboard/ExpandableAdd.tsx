@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { SubmitButton } from "@/components/SubmitButton";
 
 export function ExpandableAdd({
@@ -13,7 +13,17 @@ export function ExpandableAdd({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [entered, setEntered] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      setEntered(false);
+      return;
+    }
+    const raf = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(raf);
+  }, [open]);
 
   if (!open) {
     return (
@@ -22,7 +32,7 @@ export function ExpandableAdd({
           setError(null);
           setOpen(true);
         }}
-        className="self-start text-sm text-accent hover:opacity-80 transition-opacity"
+        className="self-start rounded-md text-sm text-accent transition-[opacity,transform] duration-150 ease-[var(--ease-out)] hover:opacity-80 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         + {label}
       </button>
@@ -43,7 +53,8 @@ export function ExpandableAdd({
           setError("Could not save — please try again.");
         }
       }}
-      className="flex flex-col gap-3"
+      className="rise-in flex flex-col gap-3"
+      {...(!entered ? { "data-closed": true } : {})}
     >
       {children}
       {error && <p className="text-sm text-red-500">{error}</p>}
@@ -52,7 +63,7 @@ export function ExpandableAdd({
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="rounded-md px-1 py-0.5 text-sm text-muted-foreground transition-[color,transform] duration-150 ease-[var(--ease-out)] hover:text-foreground active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Cancel
         </button>

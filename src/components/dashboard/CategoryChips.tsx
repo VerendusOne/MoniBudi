@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useConfirm } from "@/components/ConfirmDialog";
 
 type Category = { id: string; name: string };
 
@@ -11,6 +12,7 @@ export function CategoryChips({
   categories: Category[];
   onDelete: (categoryId: string) => Promise<void>;
 }) {
+  const confirmDialog = useConfirm();
   const [error, setError] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
 
@@ -29,7 +31,13 @@ export function CategoryChips({
               disabled={pendingId === c.id}
               aria-label={`Delete ${c.name}`}
               onClick={async () => {
-                if (!confirm(`Delete category "${c.name}"?`)) return;
+                const ok = await confirmDialog({
+                  title: "Delete category?",
+                  description: `"${c.name}" will be removed from your categories.`,
+                  confirmLabel: "Delete",
+                  destructive: true,
+                });
+                if (!ok) return;
                 setError(null);
                 setPendingId(c.id);
                 try {
@@ -40,7 +48,7 @@ export function CategoryChips({
                   setPendingId(null);
                 }
               }}
-              className="text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-50"
+              className="rounded-full text-muted-foreground transition-[color,transform] duration-150 ease-[var(--ease-out)] hover:text-red-500 active:scale-[0.9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none"
             >
               {pendingId === c.id ? "…" : "✕"}
             </button>

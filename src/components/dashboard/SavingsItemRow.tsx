@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { SubmitButton } from "@/components/SubmitButton";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { formatCurrency } from "@/lib/format";
 import { FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
+import { editButtonClass, deleteButtonClass } from "@/components/dashboard/rowActionStyles";
 
 type Item = {
   id: string;
@@ -36,6 +38,7 @@ export function SavingsItemRow({
   onUpdate: (formData: FormData) => Promise<void>;
   onDelete: () => Promise<void>;
 }) {
+  const confirmDialog = useConfirm();
   const [editing, setEditing] = useState(false);
   const [amountType, setAmountType] = useState(item.amountType);
 
@@ -113,17 +116,20 @@ export function SavingsItemRow({
         </span>
         <span>{formatCurrency(item.monthlyAmount)}/mo</span>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setEditing(true)}
-            className="text-muted-foreground hover:text-accent transition-colors"
-          >
+          <button onClick={() => setEditing(true)} className={editButtonClass}>
             Edit
           </button>
           <button
-            onClick={() => {
-              if (confirm(`Delete "${item.name}"?`)) onDelete();
+            onClick={async () => {
+              const ok = await confirmDialog({
+                title: "Delete savings item?",
+                description: `"${item.name}" will be removed. This cannot be undone.`,
+                confirmLabel: "Delete",
+                destructive: true,
+              });
+              if (ok) onDelete();
             }}
-            className="text-muted-foreground hover:text-red-500 transition-colors"
+            className={deleteButtonClass}
           >
             Delete
           </button>

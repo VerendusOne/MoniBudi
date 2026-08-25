@@ -20,15 +20,15 @@ export function Toggle({
         name={name}
         checked={checked}
         onChange={(e) => setChecked(e.target.checked)}
-        className="sr-only"
+        className="peer sr-only"
       />
       <span
-        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-150 peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-accent peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background ${
           checked ? "bg-accent glow-accent" : "bg-muted"
         }`}
       >
         <span
-          className={`inline-block h-[18px] w-[18px] transform rounded-full bg-white transition-transform ${
+          className={`inline-block h-[18px] w-[18px] transform rounded-full bg-white transition-transform duration-150 ease-[var(--ease-out)] ${
             checked ? "translate-x-6" : "translate-x-1"
           }`}
         />

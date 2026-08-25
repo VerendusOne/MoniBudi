@@ -24,7 +24,7 @@ export function ThemeSelector() {
         <button
           key={opt.value}
           onClick={() => setTheme(opt.value)}
-          className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
+          className={`px-4 py-1.5 rounded-full text-sm transition-[background-color,color,transform] duration-150 ease-[var(--ease-out)] active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
             mounted && theme === opt.value
               ? "bg-accent text-accent-foreground glow-accent"
               : "text-muted-foreground hover:text-foreground"

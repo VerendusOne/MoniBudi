@@ -19,8 +19,18 @@ export function CategoryCombobox({
   const [query, setQuery] = useState(defaultCategoryName);
   const [selectedId, setSelectedId] = useState(defaultCategoryId);
   const [open, setOpen] = useState(false);
+  const [entered, setEntered] = useState(false);
   const [highlight, setHighlight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) {
+      setEntered(false);
+      return;
+    }
+    const raf = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(raf);
+  }, [open]);
 
   const filtered = categories.filter((c) =>
     c.name.toLowerCase().includes(query.trim().toLowerCase()),
@@ -76,7 +86,10 @@ export function CategoryCombobox({
         className="mt-1"
       />
       {open && (
-        <div className="absolute z-20 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-border bg-card shadow-lg">
+        <div
+          className="pop-in absolute z-20 mt-1 w-full max-h-48 overflow-y-auto rounded-xl border border-border bg-card shadow-lg origin-top"
+          {...(!entered ? { "data-closed": true } : {})}
+        >
           {filtered.length === 0 && (
             <p className="px-3 py-2 text-sm text-muted-foreground">
               No matching categories. Add one below if needed.

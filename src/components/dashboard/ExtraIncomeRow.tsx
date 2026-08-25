@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Input } from "@/components/Input";
 import { SubmitButton } from "@/components/SubmitButton";
+import { useConfirm } from "@/components/ConfirmDialog";
+import { editButtonClass, deleteButtonClass } from "@/components/dashboard/rowActionStyles";
 import { formatCurrency, formatDate, toDateInputValue } from "@/lib/format";
 
 type Item = {
@@ -21,6 +23,7 @@ export function ExtraIncomeRow({
   onUpdate: (formData: FormData) => Promise<void>;
   onDelete: () => Promise<void>;
 }) {
+  const confirmDialog = useConfirm();
   const [editing, setEditing] = useState(false);
 
   if (editing) {
@@ -70,17 +73,20 @@ export function ExtraIncomeRow({
         <span className="text-muted-foreground">{formatDate(item.date)}</span>
         <span>{formatCurrency(item.amount)}</span>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setEditing(true)}
-            className="text-muted-foreground hover:text-accent transition-colors"
-          >
+          <button onClick={() => setEditing(true)} className={editButtonClass}>
             Edit
           </button>
           <button
-            onClick={() => {
-              if (confirm(`Delete "${item.name}"?`)) onDelete();
+            onClick={async () => {
+              const ok = await confirmDialog({
+                title: "Delete extra income?",
+                description: `"${item.name}" will be removed. This cannot be undone.`,
+                confirmLabel: "Delete",
+                destructive: true,
+              });
+              if (ok) onDelete();
             }}
-            className="text-muted-foreground hover:text-red-500 transition-colors"
+            className={deleteButtonClass}
           >
             Delete
           </button>

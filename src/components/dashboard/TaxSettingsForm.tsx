@@ -35,7 +35,7 @@ export function TaxSettingsForm({
         </span>
         <button
           onClick={() => setEditing(true)}
-          className="text-accent hover:opacity-80 transition-opacity"
+          className="rounded-md px-1 py-0.5 text-accent transition-[opacity,transform] duration-150 ease-[var(--ease-out)] hover:opacity-80 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Edit
         </button>
@@ -78,7 +78,7 @@ export function TaxSettingsForm({
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="rounded-md px-1 py-0.5 text-sm text-muted-foreground transition-[color,transform] duration-150 ease-[var(--ease-out)] hover:text-foreground active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Cancel
           </button>

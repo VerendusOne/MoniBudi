@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Input } from "@/components/Input";
 import { SubmitButton } from "@/components/SubmitButton";
+import { useConfirm } from "@/components/ConfirmDialog";
+import { editButtonClass, deleteButtonClass } from "@/components/dashboard/rowActionStyles";
 import { formatDate, toDateInputValue } from "@/lib/format";
 
 type Entry = {
@@ -24,6 +26,7 @@ export function PayPeriodEntryRow({
   onUpdate: (formData: FormData) => Promise<void>;
   onDelete: () => Promise<void>;
 }) {
+  const confirmDialog = useConfirm();
   const [editing, setEditing] = useState(false);
 
   if (editing) {
@@ -109,17 +112,20 @@ export function PayPeriodEntryRow({
             : `${entry.hoursWorked} hrs`}
         </span>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setEditing(true)}
-            className="text-muted-foreground hover:text-accent transition-colors"
-          >
+          <button onClick={() => setEditing(true)} className={editButtonClass}>
             Edit
           </button>
           <button
-            onClick={() => {
-              if (confirm("Delete this pay period entry?")) onDelete();
+            onClick={async () => {
+              const ok = await confirmDialog({
+                title: "Delete pay period?",
+                description: "This logged pay period will be removed. This cannot be undone.",
+                confirmLabel: "Delete",
+                destructive: true,
+              });
+              if (ok) onDelete();
             }}
-            className="text-muted-foreground hover:text-red-500 transition-colors"
+            className={deleteButtonClass}
           >
             Delete
           </button>

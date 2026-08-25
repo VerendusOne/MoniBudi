@@ -21,11 +21,15 @@ export function SettingsPanel({
 }) {
   return (
     <>
-      {open && (
-        <div onClick={onClose} className="fixed inset-0 bg-black/50 z-40" />
-      )}
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background border-l border-border overflow-y-auto transition-transform duration-200 ${
+        aria-hidden={!open}
+        onClick={onClose}
+        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-200 ease-[var(--ease-out)] ${
+          open ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      />
+      <div
+        className={`fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background border-l border-border overflow-y-auto transition-transform duration-200 ease-[var(--ease-drawer)] ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -35,7 +39,7 @@ export function SettingsPanel({
             <button
               onClick={onClose}
               aria-label="Close settings"
-              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              className="text-muted-foreground p-1.5 rounded-lg transition-[background-color,color,transform] duration-150 ease-[var(--ease-out)] active:scale-[0.94] hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" d="M18 6 6 18M6 6l12 12" />

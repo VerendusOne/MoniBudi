@@ -71,6 +71,47 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Stronger easing curves than CSS's built-in keywords — those are too weak
+   to feel intentional. Used via arbitrary Tailwind values, e.g.
+   ease-[var(--ease-out)]. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Shared entrance transition for popovers/dropdowns/dialogs that scale in
+   from their trigger (or center, for anything not trigger-anchored).
+   transform-origin defaults to center; set it inline for trigger-anchored
+   popovers. */
+.pop-in {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 140ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.pop-in[data-closed] {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+/* Shared entrance for inline content that reveals in place (expanding
+   forms, revealed panels) — a small rise rather than a scale. */
+.rise-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+.rise-in[data-closed] {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop-in,
+  .rise-in {
+    transition-duration: 1ms;
+  }
+}
+
 /* Glow effect retired per user feedback — class kept as a no-op so existing
    markup referencing it doesn't need to change. */
 .glow-accent {
