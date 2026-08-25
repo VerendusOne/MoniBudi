@@ -35,7 +35,8 @@ import { TabsShell } from "@/components/dashboard/TabsShell";
 import { DangerZone } from "@/components/dashboard/DangerZone";
 import { PaySettingsForm } from "@/components/dashboard/PaySettingsForm";
 import { OvertimeRuleForm } from "@/components/dashboard/OvertimeRuleForm";
-import { deletePayAccount } from "@/lib/actions/payAccounts";
+import { deletePayAccount, renamePayAccount } from "@/lib/actions/payAccounts";
+import { InlineRenameHeading } from "@/components/dashboard/InlineRenameHeading";
 import { PayPeriodEntryRow } from "@/components/dashboard/PayPeriodEntryRow";
 import { ExtraIncomeRow } from "@/components/dashboard/ExtraIncomeRow";
 import { ExpenseItemRow, FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
@@ -709,7 +710,12 @@ export default async function PayAccountPage({
         <a href={`/dashboard/${profileId}`} className="text-sm text-accent">
           ← {account.profile.name}
         </a>
-        <h1 className="text-2xl font-semibold mt-1">{account.name}</h1>
+        <div className="mt-1">
+          <InlineRenameHeading
+            name={account.name}
+            onRename={renamePayAccount.bind(null, profileId, accountId)}
+          />
+        </div>
       </div>
 
       <TabsShell

@@ -30,6 +30,7 @@ export async function renameProfile(profileId: string, formData: FormData) {
     data: { name },
   });
   revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/${profileId}`, "layout");
 }
 
 export async function deleteProfile(profileId: string) {

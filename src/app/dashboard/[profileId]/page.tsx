@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { deleteProfile } from "@/lib/actions/profiles";
+import { deleteProfile, renameProfile } from "@/lib/actions/profiles";
 import { DangerZone } from "@/components/dashboard/DangerZone";
+import { InlineRenameHeading } from "@/components/dashboard/InlineRenameHeading";
 
 export default async function ProfilePage({
   params,
@@ -21,7 +22,7 @@ export default async function ProfilePage({
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">{profile.name}</h1>
+      <InlineRenameHeading name={profile.name} onRename={renameProfile.bind(null, profile.id)} />
 
       <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-3">
         <h2 className="text-base font-semibold">Jobs</h2>

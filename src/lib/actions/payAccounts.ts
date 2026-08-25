@@ -46,6 +46,7 @@ export async function renamePayAccount(
     data: { name },
   });
   revalidatePath(`/dashboard/${profileId}`);
+  revalidatePath(`/dashboard/${profileId}/${payAccountId}`);
 }
 
 export async function deletePayAccount(profileId: string, payAccountId: string) {
