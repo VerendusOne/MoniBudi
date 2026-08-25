@@ -293,7 +293,7 @@ export default async function PayAccountPage({
         </div>
 
         <form action={boundCreateEntry} className="flex flex-col gap-3">
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <label className="text-sm text-muted-foreground flex-1">
               Period start
               <Input name="periodStart" type="date" required className="mt-1" />
@@ -304,7 +304,7 @@ export default async function PayAccountPage({
             </label>
           </div>
           {paySettings?.payFrequency === "BIWEEKLY" ? (
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <label className="text-sm text-muted-foreground flex-1">
                 Week 1 hours
                 <Input
@@ -387,7 +387,7 @@ export default async function PayAccountPage({
               className="mt-1"
             />
           </label>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <label className="text-sm text-muted-foreground flex-1">
               Amount
               <Input
@@ -547,7 +547,7 @@ export default async function PayAccountPage({
             Name
             <Input name="name" placeholder="e.g. Rent" required className="mt-1" />
           </label>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <label className="text-sm text-muted-foreground flex-1">
               Amount
               <Input
@@ -633,7 +633,7 @@ export default async function PayAccountPage({
             Name
             <Input name="name" placeholder="e.g. 401k" required className="mt-1" />
           </label>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <label className="text-sm text-muted-foreground flex-1">
               Type
               <Select name="amountType" defaultValue="FLAT" className="mt-1">

@@ -98,30 +98,32 @@ export function PayPeriodEntryRow({
   }
 
   return (
-    <div className="flex items-center justify-between text-sm bg-background border border-border rounded-xl px-4 py-2">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 text-sm bg-background border border-border rounded-xl px-4 py-2">
       <span>
         {formatDate(entry.periodStart)} – {formatDate(entry.periodEnd)}
       </span>
-      <span className="text-muted-foreground">
-        {entry.hoursWorkedWeek2 != null
-          ? `${entry.hoursWorked} + ${entry.hoursWorkedWeek2} hrs`
-          : `${entry.hoursWorked} hrs`}
-      </span>
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => setEditing(true)}
-          className="text-muted-foreground hover:text-accent transition-colors"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => {
-            if (confirm("Delete this pay period entry?")) onDelete();
-          }}
-          className="text-muted-foreground hover:text-red-500 transition-colors"
-        >
-          Delete
-        </button>
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 sm:justify-end">
+        <span className="text-muted-foreground">
+          {entry.hoursWorkedWeek2 != null
+            ? `${entry.hoursWorked} + ${entry.hoursWorkedWeek2} hrs`
+            : `${entry.hoursWorked} hrs`}
+        </span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setEditing(true)}
+            className="text-muted-foreground hover:text-accent transition-colors"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => {
+              if (confirm("Delete this pay period entry?")) onDelete();
+            }}
+            className="text-muted-foreground hover:text-red-500 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

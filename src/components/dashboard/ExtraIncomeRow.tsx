@@ -30,7 +30,7 @@ export function ExtraIncomeRow({
           await onUpdate(formData);
           setEditing(false);
         }}
-        className="flex items-center gap-2 bg-background border border-border rounded-xl px-4 py-2"
+        className="flex flex-wrap items-center gap-2 bg-background border border-border rounded-xl px-4 py-2"
       >
         <Input name="name" required defaultValue={item.name} className="py-1 flex-1" />
         <Input
@@ -64,27 +64,27 @@ export function ExtraIncomeRow({
   }
 
   return (
-    <div className="flex items-center justify-between text-sm bg-background border border-border rounded-xl px-4 py-2">
-      <span className="flex-1">{item.name}</span>
-      <span className="text-muted-foreground w-20 text-right">
-        {formatDate(item.date)}
-      </span>
-      <span className="w-20 text-right">{formatCurrency(item.amount)}</span>
-      <div className="flex items-center gap-3 pl-4">
-        <button
-          onClick={() => setEditing(true)}
-          className="text-muted-foreground hover:text-accent transition-colors"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => {
-            if (confirm(`Delete "${item.name}"?`)) onDelete();
-          }}
-          className="text-muted-foreground hover:text-red-500 transition-colors"
-        >
-          Delete
-        </button>
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 text-sm bg-background border border-border rounded-xl px-4 py-2">
+      <span>{item.name}</span>
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 sm:justify-end">
+        <span className="text-muted-foreground">{formatDate(item.date)}</span>
+        <span>{formatCurrency(item.amount)}</span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setEditing(true)}
+            className="text-muted-foreground hover:text-accent transition-colors"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => {
+              if (confirm(`Delete "${item.name}"?`)) onDelete();
+            }}
+            className="text-muted-foreground hover:text-red-500 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

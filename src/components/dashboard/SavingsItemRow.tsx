@@ -103,29 +103,31 @@ export function SavingsItemRow({
   }
 
   return (
-    <div className="flex items-center justify-between text-sm bg-background border border-border rounded-xl px-4 py-2">
-      <span className="flex-1">{item.name}</span>
-      <span className="text-muted-foreground w-40 text-right">
-        {item.amountType === "PERCENT_OF_GROSS"
-          ? `${item.percent}% of gross`
-          : `${formatCurrency(item.flatAmount ?? 0)} / ${FREQUENCY_LABELS[item.frequency]}`}
-      </span>
-      <span className="w-24 text-right">{formatCurrency(item.monthlyAmount)}/mo</span>
-      <div className="flex items-center gap-3 pl-4">
-        <button
-          onClick={() => setEditing(true)}
-          className="text-muted-foreground hover:text-accent transition-colors"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => {
-            if (confirm(`Delete "${item.name}"?`)) onDelete();
-          }}
-          className="text-muted-foreground hover:text-red-500 transition-colors"
-        >
-          Delete
-        </button>
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 text-sm bg-background border border-border rounded-xl px-4 py-2">
+      <span>{item.name}</span>
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 sm:justify-end">
+        <span className="text-muted-foreground">
+          {item.amountType === "PERCENT_OF_GROSS"
+            ? `${item.percent}% of gross`
+            : `${formatCurrency(item.flatAmount ?? 0)} / ${FREQUENCY_LABELS[item.frequency]}`}
+        </span>
+        <span>{formatCurrency(item.monthlyAmount)}/mo</span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setEditing(true)}
+            className="text-muted-foreground hover:text-accent transition-colors"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => {
+              if (confirm(`Delete "${item.name}"?`)) onDelete();
+            }}
+            className="text-muted-foreground hover:text-red-500 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

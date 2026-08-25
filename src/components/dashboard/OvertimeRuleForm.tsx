@@ -81,7 +81,7 @@ export function OvertimeRuleForm({
         Optional: a second, higher tier for extreme hours (e.g. double-time
         after 60 hrs/week). Leave blank if this doesn&apos;t apply to you.
       </p>
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <label className="text-sm text-muted-foreground flex-1">
           Second tier starts after
           <Input
