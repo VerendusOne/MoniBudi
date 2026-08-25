@@ -77,7 +77,7 @@ export function DashboardShell({
           >
             <Sidebar profiles={profiles} onNavigate={() => setMenuOpen(false)} />
           </div>
-          <div className="flex-1 p-4 md:p-6 overflow-y-auto">{children}</div>
+          <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">{children}</div>
         </div>
 
         <SettingsPanel

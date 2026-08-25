@@ -8,7 +8,7 @@ import { Button } from "@/components/Button";
 export function InlineRenameHeading({
   name,
   onRename,
-  headingClassName = "text-2xl font-semibold",
+  headingClassName = "text-2xl lg:text-3xl font-semibold",
 }: {
   name: string;
   onRename: (formData: FormData) => Promise<void>;
