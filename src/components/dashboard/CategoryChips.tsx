@@ -47,7 +47,7 @@ export function CategoryChips({
           </span>
         ))}
         {categories.length === 0 && (
-          <p className="text-muted-foreground text-sm">No custom categories yet.</p>
+          <p className="text-muted-foreground text-sm">No categories yet.</p>
         )}
       </div>
     </div>

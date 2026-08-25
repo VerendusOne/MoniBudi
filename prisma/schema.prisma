@@ -102,6 +102,7 @@ model PayAccount {
   taxSettings      TaxSettings?
   expenseItems     ExpenseItem[]
   expenseCategories ExpenseCategory[]
+  hiddenExpenseCategories HiddenExpenseCategory[]
   savingsItems     SavingsItem[]
   monthlySnapshots MonthlySnapshot[]
 
@@ -207,8 +208,21 @@ model ExpenseCategory {
   payAccount   PayAccount? @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
 
   expenseItems ExpenseItem[]
+  hiddenFor    HiddenExpenseCategory[]
 
   @@unique([payAccountId, name])
+}
+
+// Lets an account hide a shared preset category (payAccountId = null on
+// ExpenseCategory) from its own view without deleting it for every account.
+model HiddenExpenseCategory {
+  id           String          @id @default(cuid())
+  payAccountId String
+  payAccount   PayAccount      @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
+  categoryId   String
+  category     ExpenseCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([payAccountId, categoryId])
 }
 
 model ExpenseItem {

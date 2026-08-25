@@ -56,11 +56,22 @@ export async function deleteExpenseCategory(
     );
   }
 
-  // Only ever deletes categories scoped to this account — presets (payAccountId
-  // null) never match this filter, so they can't be deleted from here.
-  await prisma.expenseCategory.deleteMany({
-    where: { id: categoryId, payAccountId },
-  });
+  const category = await prisma.expenseCategory.findUnique({ where: { id: categoryId } });
+  if (!category) return;
+
+  if (category.payAccountId === payAccountId) {
+    // Custom category scoped to this account — safe to delete outright.
+    await prisma.expenseCategory.delete({ where: { id: categoryId } });
+  } else if (category.payAccountId === null) {
+    // Shared preset — hide it for this account instead of deleting the
+    // shared row, which would remove it for every other account too.
+    await prisma.hiddenExpenseCategory.upsert({
+      where: { payAccountId_categoryId: { payAccountId, categoryId } },
+      create: { payAccountId, categoryId },
+      update: {},
+    });
+  }
+
   revalidatePath(`/dashboard/${profileId}/${payAccountId}`);
 }
 

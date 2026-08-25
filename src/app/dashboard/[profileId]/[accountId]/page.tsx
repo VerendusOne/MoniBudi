@@ -75,7 +75,10 @@ export default async function PayAccountPage({
   if (!account) notFound();
 
   const categories = await prisma.expenseCategory.findMany({
-    where: { OR: [{ payAccountId: null }, { payAccountId: accountId }] },
+    where: {
+      OR: [{ payAccountId: null }, { payAccountId: accountId }],
+      hiddenFor: { none: { payAccountId: accountId } },
+    },
     orderBy: [{ isPreset: "desc" }, { name: "asc" }],
   });
 
@@ -576,11 +579,8 @@ export default async function PayAccountPage({
         </ExpandableAdd>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-muted-foreground">Your categories</p>
-          <CategoryChips
-            categories={categories.filter((c) => c.payAccountId === accountId)}
-            onDelete={boundDeleteExpenseCategory}
-          />
+          <p className="text-sm text-muted-foreground">Categories</p>
+          <CategoryChips categories={categories} onDelete={boundDeleteExpenseCategory} />
         </div>
 
         <ExpandableAdd label="New category" action={boundCreateExpenseCategory}>
