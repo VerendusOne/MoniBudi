@@ -712,9 +712,9 @@ export default async function PayAccountPage({
       <TabsShell
         tabs={[
           { key: "home", label: "Home", content: homeTab },
-          { key: "taxes", label: "Taxes", content: taxesTab },
           { key: "expenses", label: "Expenses", content: expensesTab },
           { key: "history", label: "History", content: historyTab },
+          { key: "taxes", label: "Taxes", content: taxesTab },
         ]}
       />
 
