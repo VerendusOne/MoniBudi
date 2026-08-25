@@ -13,11 +13,15 @@ export function ExpandableAdd({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!open) {
     return (
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setError(null);
+          setOpen(true);
+        }}
         className="self-start text-sm text-accent hover:opacity-80 transition-opacity"
       >
         + {label}
@@ -28,12 +32,21 @@ export function ExpandableAdd({
   return (
     <form
       action={async (formData: FormData) => {
-        await action(formData);
-        setOpen(false);
+        try {
+          await action(formData);
+          setOpen(false);
+        } catch {
+          // A failed save (e.g. a transient database blip) used to crash
+          // the whole page with no way to recover except a hard refresh.
+          // Keep the form open with what was typed so nothing is lost,
+          // and let the user retry.
+          setError("Could not save — please try again.");
+        }
       }}
       className="flex flex-col gap-3"
     >
       {children}
+      {error && <p className="text-sm text-red-500">{error}</p>}
       <div className="flex gap-3 items-center">
         <SubmitButton>Save</SubmitButton>
         <button
