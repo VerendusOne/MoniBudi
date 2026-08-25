@@ -48,6 +48,14 @@ export async function deleteExpenseCategory(
   categoryId: string,
 ) {
   await requireOwnedAccount(profileId, payAccountId);
+
+  const inUse = await prisma.expenseItem.count({ where: { categoryId, payAccountId } });
+  if (inUse > 0) {
+    throw new Error(
+      `Cannot delete — ${inUse} expense${inUse === 1 ? " uses" : "s use"} this category. Move ${inUse === 1 ? "it" : "them"} to another category first.`,
+    );
+  }
+
   // Only ever deletes categories scoped to this account — presets (payAccountId
   // null) never match this filter, so they can't be deleted from here.
   await prisma.expenseCategory.deleteMany({
@@ -69,7 +77,8 @@ export async function createExpenseItem(
   const amount = num(formData, "amount");
   const frequency = String(formData.get("frequency")) as RecurrenceFrequency;
   const categoryId = String(formData.get("categoryId") ?? "");
-  if (!name || !categoryId) return;
+  if (!name) throw new Error("Name is required.");
+  if (!categoryId) throw new Error("Please select a category.");
 
   await prisma.expenseItem.create({
     data: { payAccountId, name, amount, frequency, categoryId },
@@ -90,7 +99,8 @@ export async function updateExpenseItem(
   const amount = num(formData, "amount");
   const frequency = String(formData.get("frequency")) as RecurrenceFrequency;
   const categoryId = String(formData.get("categoryId") ?? "");
-  if (!name || !categoryId) return;
+  if (!name) throw new Error("Name is required.");
+  if (!categoryId) throw new Error("Please select a category.");
 
   await prisma.expenseItem.updateMany({
     where: { id: itemId, payAccountId },

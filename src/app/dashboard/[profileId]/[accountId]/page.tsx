@@ -14,6 +14,7 @@ import {
 import { upsertTaxSettings } from "@/lib/actions/taxes";
 import {
   createExpenseCategory,
+  deleteExpenseCategory,
   createExpenseItem,
   updateExpenseItem,
   deleteExpenseItem,
@@ -38,6 +39,8 @@ import { deletePayAccount } from "@/lib/actions/payAccounts";
 import { PayPeriodEntryRow } from "@/components/dashboard/PayPeriodEntryRow";
 import { ExtraIncomeRow } from "@/components/dashboard/ExtraIncomeRow";
 import { ExpenseItemRow, FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
+import { CategoryCombobox } from "@/components/dashboard/CategoryCombobox";
+import { CategoryChips } from "@/components/dashboard/CategoryChips";
 import { ExpandableAdd } from "@/components/dashboard/ExpandableAdd";
 import { TaxSettingsForm } from "@/components/dashboard/TaxSettingsForm";
 import { SavingsItemRow } from "@/components/dashboard/SavingsItemRow";
@@ -131,6 +134,15 @@ export default async function PayAccountPage({
   }));
   const totalExpensesMonthly = expenseItemsMonthly.reduce((sum, i) => sum + i.monthlyAmount, 0);
 
+  const categoryTotals = Object.values(
+    expenseItemsMonthly.reduce<Record<string, { name: string; amount: number }>>((acc, item) => {
+      const key = item.categoryId;
+      if (!acc[key]) acc[key] = { name: item.category.name, amount: 0 };
+      acc[key].amount += item.monthlyAmount;
+      return acc;
+    }, {}),
+  ).sort((a, b) => b.amount - a.amount);
+
   const savingsItemsMonthly = account.savingsItems.map((item) => ({
     ...item,
     monthlyAmount: computeSavingsMonthly(
@@ -171,6 +183,7 @@ export default async function PayAccountPage({
   const boundCreateExtraIncome = createExtraIncomeItem.bind(null, profileId, accountId);
   const boundUpsertTaxSettings = upsertTaxSettings.bind(null, profileId, accountId);
   const boundCreateExpenseCategory = createExpenseCategory.bind(null, profileId, accountId);
+  const boundDeleteExpenseCategory = deleteExpenseCategory.bind(null, profileId, accountId);
   const boundCreateExpenseItem = createExpenseItem.bind(null, profileId, accountId);
   const boundCreateSavingsItem = createSavingsItem.bind(null, profileId, accountId);
 
@@ -416,6 +429,21 @@ export default async function PayAccountPage({
           </div>
         </section>
       )}
+
+      {/* Spending by Category */}
+      {categoryTotals.length > 0 && (
+        <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-2">
+          <h2 className="text-base font-semibold">Spending by Category</h2>
+          <div className="flex flex-col divide-y divide-border text-sm">
+            {categoryTotals.map((c) => (
+              <div key={c.name} className="flex justify-between py-1.5">
+                <span className="text-muted-foreground">{c.name}</span>
+                <span>{formatCurrency(c.amount)}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 
@@ -540,15 +568,17 @@ export default async function PayAccountPage({
           </div>
           <label className="text-sm text-muted-foreground">
             Category
-            <Select name="categoryId" required className="mt-1">
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </Select>
+            <CategoryCombobox name="categoryId" categories={categories} />
           </label>
         </ExpandableAdd>
+
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground">Your categories</p>
+          <CategoryChips
+            categories={categories.filter((c) => c.payAccountId === accountId)}
+            onDelete={boundDeleteExpenseCategory}
+          />
+        </div>
 
         <ExpandableAdd label="New category" action={boundCreateExpenseCategory}>
           <label className="text-sm text-muted-foreground">

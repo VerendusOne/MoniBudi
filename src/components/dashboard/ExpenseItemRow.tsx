@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { SubmitButton } from "@/components/SubmitButton";
+import { CategoryCombobox } from "@/components/dashboard/CategoryCombobox";
 import { formatCurrency } from "@/lib/format";
 
 type Category = { id: string; name: string };
@@ -51,15 +52,20 @@ export function ExpenseItemRow({
   onDelete: () => Promise<void>;
 }) {
   const [editing, setEditing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (editing) {
     return (
       <form
         action={async (formData: FormData) => {
-          await onUpdate(formData);
-          setEditing(false);
+          try {
+            await onUpdate(formData);
+            setEditing(false);
+          } catch (e) {
+            setError(e instanceof Error ? e.message : "Could not save.");
+          }
         }}
-        className="flex flex-wrap items-center gap-2 bg-background border border-border rounded-xl px-4 py-2"
+        className="flex flex-wrap items-start gap-2 bg-background border border-border rounded-xl px-4 py-2"
       >
         <Input name="name" required defaultValue={item.name} className="py-1 flex-1 min-w-[120px]" />
         <Input
@@ -74,13 +80,14 @@ export function ExpenseItemRow({
         <Select name="frequency" defaultValue={item.frequency} className="py-1 w-36">
           <FrequencyOptions />
         </Select>
-        <Select name="categoryId" defaultValue={item.categoryId} className="py-1 w-36">
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </Select>
+        <div className="w-44">
+          <CategoryCombobox
+            name="categoryId"
+            categories={categories}
+            defaultCategoryId={item.categoryId}
+            defaultCategoryName={item.categoryName}
+          />
+        </div>
         <SubmitButton className="px-3 py-1 text-xs shrink-0" pendingLabel="Saving…">
           Save
         </SubmitButton>
@@ -91,6 +98,7 @@ export function ExpenseItemRow({
         >
           Cancel
         </button>
+        {error && <p className="text-sm text-red-500 w-full">{error}</p>}
       </form>
     );
   }
