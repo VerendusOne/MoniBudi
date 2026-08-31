@@ -7,7 +7,7 @@ import { SubmitButton } from "@/components/SubmitButton";
 import { CategoryCombobox } from "@/components/dashboard/CategoryCombobox";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { editButtonClass, deleteButtonClass } from "@/components/dashboard/rowActionStyles";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrencyPrecise } from "@/lib/format";
 
 type Category = { id: string; name: string };
 
@@ -114,7 +114,7 @@ export function ExpenseItemRow({
       </div>
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 sm:justify-end">
         <span className="text-muted-foreground">
-          {formatCurrency(item.amount)} / {FREQUENCY_LABELS[item.frequency]?.toLowerCase()}
+          {formatCurrencyPrecise(item.amount)} / {FREQUENCY_LABELS[item.frequency]?.toLowerCase()}
         </span>
         <div className="flex items-center gap-3">
           <button onClick={() => setEditing(true)} className={editButtonClass}>

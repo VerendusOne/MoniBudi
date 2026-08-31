@@ -5,7 +5,7 @@ import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { SubmitButton } from "@/components/SubmitButton";
 import { useConfirm } from "@/components/ConfirmDialog";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrencyPrecise } from "@/lib/format";
 import { FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
 import { editButtonClass, deleteButtonClass } from "@/components/dashboard/rowActionStyles";
 
@@ -112,9 +112,9 @@ export function SavingsItemRow({
         <span className="text-muted-foreground">
           {item.amountType === "PERCENT_OF_GROSS"
             ? `${item.percent}% of gross`
-            : `${formatCurrency(item.flatAmount ?? 0)} / ${FREQUENCY_LABELS[item.frequency]}`}
+            : `${formatCurrencyPrecise(item.flatAmount ?? 0)} / ${FREQUENCY_LABELS[item.frequency]}`}
         </span>
-        <span>{formatCurrency(item.monthlyAmount)}/mo</span>
+        <span>{formatCurrencyPrecise(item.monthlyAmount)}/mo</span>
         <div className="flex items-center gap-3">
           <button onClick={() => setEditing(true)} className={editButtonClass}>
             Edit

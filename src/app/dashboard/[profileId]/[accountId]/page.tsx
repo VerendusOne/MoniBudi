@@ -27,7 +27,7 @@ import { estimateMonthlyTaxes } from "@/lib/calculations/taxes";
 import { normalizeToMonthly, computeSavingsMonthly } from "@/lib/calculations/expenses";
 import { saveCurrentMonthSnapshot } from "@/lib/history";
 import { US_STATES } from "@/lib/data/stateTax";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatCurrencyPrecise } from "@/lib/format";
 import { CountUpCurrency } from "@/components/CountUpCurrency";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
@@ -516,7 +516,7 @@ export default async function PayAccountPage({
         <div className="flex items-center justify-between">
           <h2 className="text-base lg:text-lg font-semibold">Expenses</h2>
           <span className="text-sm text-muted-foreground">
-            {formatCurrency(totalExpensesMonthly)}/mo
+            {formatCurrencyPrecise(totalExpensesMonthly)}/mo
           </span>
         </div>
         <p className="text-xs text-muted-foreground -mt-2">
@@ -597,7 +597,7 @@ export default async function PayAccountPage({
         <div className="flex items-center justify-between">
           <h2 className="text-base lg:text-lg font-semibold">Savings</h2>
           <span className="text-sm text-muted-foreground">
-            {formatCurrency(totalSavingsMonthly)}/mo
+            {formatCurrencyPrecise(totalSavingsMonthly)}/mo
           </span>
         </div>
         <p className="text-xs text-muted-foreground -mt-2">

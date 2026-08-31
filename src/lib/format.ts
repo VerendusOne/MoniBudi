@@ -6,6 +6,16 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+/** Same as formatCurrency, but always shows cents — for exact per-item amounts. */
+export function formatCurrencyPrecise(amount: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
 export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
