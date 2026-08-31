@@ -28,6 +28,7 @@ import { normalizeToMonthly, computeSavingsMonthly } from "@/lib/calculations/ex
 import { saveCurrentMonthSnapshot } from "@/lib/history";
 import { US_STATES } from "@/lib/data/stateTax";
 import { formatCurrency } from "@/lib/format";
+import { CountUpCurrency } from "@/components/CountUpCurrency";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { SubmitButton } from "@/components/SubmitButton";
@@ -204,12 +205,11 @@ export default async function PayAccountPage({
           <p className="label-caps text-muted-foreground mb-2 md:text-xs">
             Left over this month
           </p>
-          <p
-            className="text-6xl md:text-7xl lg:text-8xl tracking-tight tabular-nums text-foreground drop-shadow-[0_0_36px_var(--accent)]"
+          <CountUpCurrency
+            value={leftOver}
+            className="block text-6xl md:text-7xl lg:text-8xl tracking-tight tabular-nums text-foreground drop-shadow-[0_0_36px_var(--accent)]"
             style={{ fontFamily: "var(--font-audiowide)" }}
-          >
-            {formatCurrency(leftOver)}
-          </p>
+          />
           <p className="text-xs md:text-sm text-muted-foreground mt-3">
             {formatCurrency(monthlyGross.amount)} from pay
             {extraIncomeThisMonth > 0 &&
@@ -227,7 +227,7 @@ export default async function PayAccountPage({
       )}
 
       {/* Pay Settings */}
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <h2 className="text-base lg:text-lg font-semibold">Pay Settings</h2>
         <PaySettingsForm
           paySettings={
@@ -244,7 +244,7 @@ export default async function PayAccountPage({
       </section>
 
       {/* Overtime Rule */}
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <h2 className="text-base lg:text-lg font-semibold">Overtime Rule</h2>
         <OvertimeRuleForm
           overtimeRule={
@@ -263,7 +263,7 @@ export default async function PayAccountPage({
       </section>
 
       {/* Pay Period Entries */}
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <h2 className="text-base lg:text-lg font-semibold">Logged Pay Periods</h2>
         <p className="text-xs text-muted-foreground -mt-2">
           Days covered by a logged period use its actual pay; the rest of
@@ -355,7 +355,7 @@ export default async function PayAccountPage({
       </section>
 
       {/* Extra Income */}
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <h2 className="text-base lg:text-lg font-semibold">Extra Income</h2>
         <p className="text-xs text-muted-foreground -mt-2">
           One-off money that isn&apos;t part of your regular pay — bonuses,
@@ -419,7 +419,7 @@ export default async function PayAccountPage({
 
       {/* Expenses & Savings summary */}
       {(expenseItemsMonthly.length > 0 || savingsItemsMonthly.length > 0) && (
-        <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-3">
+        <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-3">
           <h2 className="text-base lg:text-lg font-semibold">Expenses &amp; Savings This Month</h2>
           <p className="text-xs text-muted-foreground -mt-1">
             Manage individual items in the Expenses tab.
@@ -439,7 +439,7 @@ export default async function PayAccountPage({
 
       {/* Spending by Category */}
       {categoryTotals.length > 0 && (
-        <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-2">
+        <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-2">
           <h2 className="text-base lg:text-lg font-semibold">Spending by Category</h2>
           <div className="flex flex-col divide-y divide-border text-sm">
             {categoryTotals.map((c) => (
@@ -456,7 +456,7 @@ export default async function PayAccountPage({
 
   const taxesTab = (
     <div className="max-w-2xl md:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-6">
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <h2 className="text-base lg:text-lg font-semibold">Taxes</h2>
 
         <TaxSettingsForm
@@ -512,7 +512,7 @@ export default async function PayAccountPage({
   const expensesTab = (
     <div className="max-w-2xl md:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-6">
       {/* Expenses */}
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base lg:text-lg font-semibold">Expenses</h2>
           <span className="text-sm text-muted-foreground">
@@ -593,7 +593,7 @@ export default async function PayAccountPage({
       </section>
 
       {/* Savings */}
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base lg:text-lg font-semibold">Savings</h2>
           <span className="text-sm text-muted-foreground">
@@ -682,7 +682,7 @@ export default async function PayAccountPage({
 
   const historyTab = (
     <div className="max-w-2xl md:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-6">
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-2">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-2">
         <h2 className="text-base lg:text-lg font-semibold">History</h2>
         <p className="text-xs text-muted-foreground -mt-1 mb-2">
           A snapshot of this job&apos;s numbers is saved automatically

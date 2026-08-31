@@ -5,6 +5,9 @@ import Image from "next/image";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 import { ConfirmProvider } from "@/components/ConfirmDialog";
+import { AmbientBackground } from "@/components/AmbientBackground";
+import { PageTransition } from "@/components/dashboard/PageTransition";
+import { Avatar } from "@/components/Avatar";
 
 type SidebarProfile = {
   id: string;
@@ -16,12 +19,14 @@ export function DashboardShell({
   profiles,
   userName,
   userEmail,
+  avatarUrl,
   signOutForm,
   children,
 }: {
   profiles: SidebarProfile[];
   userName: string | null | undefined;
   userEmail: string | null | undefined;
+  avatarUrl: string | null;
   signOutForm: ReactNode;
   children: ReactNode;
 }) {
@@ -52,12 +57,9 @@ export function DashboardShell({
             <button
               onClick={() => setSettingsOpen(true)}
               aria-label="Settings"
-              className="p-1.5 rounded-lg transition-[background-color,color,transform] duration-150 ease-[var(--ease-out)] active:scale-[0.94] hover:bg-muted hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="rounded-full transition-[transform,box-shadow] duration-150 ease-[var(--ease-out)] active:scale-[0.94] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
+              <Avatar src={avatarUrl} name={userName} email={userEmail} size={32} />
             </button>
           </div>
         </header>
@@ -77,7 +79,10 @@ export function DashboardShell({
           >
             <Sidebar profiles={profiles} onNavigate={() => setMenuOpen(false)} />
           </div>
-          <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">{children}</div>
+          <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">
+            <AmbientBackground />
+            <PageTransition>{children}</PageTransition>
+          </div>
         </div>
 
         <SettingsPanel
@@ -85,6 +90,7 @@ export function DashboardShell({
           onClose={() => setSettingsOpen(false)}
           name={userName ?? null}
           email={userEmail ?? null}
+          avatarUrl={avatarUrl}
           signOutForm={signOutForm}
         />
       </div>

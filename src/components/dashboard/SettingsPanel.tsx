@@ -11,12 +11,14 @@ export function SettingsPanel({
   onClose,
   name,
   email,
+  avatarUrl,
   signOutForm,
 }: {
   open: boolean;
   onClose: () => void;
   name: string | null;
   email: string | null;
+  avatarUrl: string | null;
   signOutForm: ReactNode;
 }) {
   return (
@@ -54,7 +56,7 @@ export function SettingsPanel({
 
           <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
             <h2 className="text-base font-semibold">Your Account</h2>
-            <AccountForm name={name} email={email} />
+            <AccountForm name={name} email={email} avatarUrl={avatarUrl} />
           </section>
 
           <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">

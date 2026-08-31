@@ -3,8 +3,74 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { put, del } from "@vercel/blob";
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
+
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
+const ALLOWED_AVATAR_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
+
+export async function updateAvatar(formData: FormData) {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+
+  const file = formData.get("avatar");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Please choose an image." };
+  }
+  if (!ALLOWED_AVATAR_TYPES.has(file.type)) {
+    return { error: "Please choose a PNG, JPEG, WEBP, or GIF image." };
+  }
+  if (file.size > MAX_AVATAR_BYTES) {
+    return { error: "Image must be under 5MB." };
+  }
+
+  const previous = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { image: true },
+  });
+
+  const extension = file.type.split("/")[1] ?? "png";
+  const blob = await put(`avatars/${session.user.id}-${Date.now()}.${extension}`, file, {
+    access: "public",
+    addRandomSuffix: false,
+  });
+
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { image: blob.url },
+  });
+
+  // Best-effort cleanup of the old file — a failure here shouldn't block
+  // the new avatar from taking effect.
+  if (previous?.image) {
+    await del(previous.image).catch(() => {});
+  }
+
+  revalidatePath("/dashboard");
+  return { error: null };
+}
+
+export async function removeAvatar() {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { image: true },
+  });
+
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { image: null },
+  });
+
+  if (user?.image) {
+    await del(user.image).catch(() => {});
+  }
+
+  revalidatePath("/dashboard");
+}
 
 export async function updateUserProfile(formData: FormData) {
   const session = await auth();

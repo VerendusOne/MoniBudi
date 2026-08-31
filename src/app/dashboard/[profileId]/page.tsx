@@ -24,7 +24,7 @@ export default async function ProfilePage({
     <div className="max-w-2xl md:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-6">
       <InlineRenameHeading name={profile.name} onRename={renameProfile.bind(null, profile.id)} />
 
-      <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-3">
+      <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-3">
         <h2 className="text-base lg:text-lg font-semibold">Jobs</h2>
         <div className="flex flex-col gap-2">
           {profile.payAccounts.map((account) => (

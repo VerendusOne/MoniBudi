@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Input } from "@/components/Input";
 import { SubmitButton } from "@/components/SubmitButton";
+import { AvatarUpload } from "@/components/settings/AvatarUpload";
 import { updateUserProfile } from "@/lib/actions/account";
 
 type State = { error: string | null };
@@ -10,9 +11,11 @@ type State = { error: string | null };
 export function AccountForm({
   name,
   email,
+  avatarUrl,
 }: {
   name: string | null;
   email: string | null;
+  avatarUrl: string | null;
 }) {
   const [state, formAction] = useActionState<State, FormData>(
     async (_prev, formData) => updateUserProfile(formData),
@@ -20,7 +23,8 @@ export function AccountForm({
   );
 
   return (
-    <form action={formAction} className="flex flex-col gap-3">
+    <form action={formAction} className="flex flex-col gap-4">
+      <AvatarUpload avatarUrl={avatarUrl} name={name} email={email} />
       <label className="text-sm text-muted-foreground">
         Name
         <Input name="name" defaultValue={name ?? ""} placeholder="Your name" className="mt-1" />

@@ -15,7 +15,10 @@ export default async function DashboardLayout({
       include: { payAccounts: { orderBy: { createdAt: "asc" }, select: { id: true, name: true } } },
       orderBy: { createdAt: "asc" },
     }),
-    prisma.user.findUnique({ where: { id: session!.user!.id }, select: { name: true, email: true } }),
+    prisma.user.findUnique({
+      where: { id: session!.user!.id },
+      select: { name: true, email: true, image: true },
+    }),
   ]);
 
   const signOutForm = (
@@ -36,6 +39,7 @@ export default async function DashboardLayout({
       profiles={profiles}
       userName={user?.name}
       userEmail={user?.email}
+      avatarUrl={user?.image ?? null}
       signOutForm={signOutForm}
     >
       {children}

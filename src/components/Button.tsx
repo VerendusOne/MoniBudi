@@ -1,10 +1,11 @@
 import { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 
 const base =
-  "px-5 py-2.5 rounded-full text-sm font-medium transition-[transform,opacity,border-color] duration-150 ease-[var(--ease-out)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none";
+  "px-5 py-2.5 rounded-full text-sm font-medium transition-[transform,filter,box-shadow,border-color] duration-150 ease-[var(--ease-out)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none";
 const variants = {
-  primary: "bg-accent text-accent-foreground glow-accent hover:opacity-90",
-  secondary: "bg-card text-foreground border border-border hover:border-accent",
+  primary:
+    "gradient-accent text-accent-foreground shadow-[0_8px_24px_-8px_var(--accent)] hover:shadow-[0_10px_30px_-6px_var(--accent)] hover:brightness-110",
+  secondary: "bg-card text-foreground border border-border hover:border-accent card-shadow",
 };
 
 type Variant = keyof typeof variants;
