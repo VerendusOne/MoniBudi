@@ -24,7 +24,7 @@ import {
 } from "@/lib/actions/expenses";
 import { computeMonthlyGross } from "@/lib/calculations/income";
 import { estimateMonthlyTaxes } from "@/lib/calculations/taxes";
-import { normalizeToMonthly, computeSavingsMonthly } from "@/lib/calculations/expenses";
+import { computeAmountMonthly } from "@/lib/calculations/expenses";
 import { saveCurrentMonthSnapshot } from "@/lib/history";
 import { US_STATES } from "@/lib/data/stateTax";
 import { formatCurrency, formatCurrencyPrecise } from "@/lib/format";
@@ -135,7 +135,16 @@ export default async function PayAccountPage({
 
   const expenseItemsMonthly = account.expenseItems.map((item) => ({
     ...item,
-    monthlyAmount: normalizeToMonthly(Number(item.amount), item.frequency, payFrequency),
+    monthlyAmount: computeAmountMonthly(
+      {
+        amountType: item.amountType,
+        flatAmount: item.flatAmount ? Number(item.flatAmount) : null,
+        percent: item.percent ? Number(item.percent) : null,
+        frequency: item.frequency,
+      },
+      totalGross,
+      payFrequency,
+    ),
   }));
   const totalExpensesMonthly = expenseItemsMonthly.reduce((sum, i) => sum + i.monthlyAmount, 0);
 
@@ -150,7 +159,7 @@ export default async function PayAccountPage({
 
   const savingsItemsMonthly = account.savingsItems.map((item) => ({
     ...item,
-    monthlyAmount: computeSavingsMonthly(
+    monthlyAmount: computeAmountMonthly(
       {
         amountType: item.amountType,
         flatAmount: item.flatAmount ? Number(item.flatAmount) : null,
@@ -532,10 +541,13 @@ export default async function PayAccountPage({
               item={{
                 id: item.id,
                 name: item.name,
-                amount: Number(item.amount),
+                amountType: item.amountType,
+                flatAmount: item.flatAmount ? Number(item.flatAmount) : null,
+                percent: item.percent ? Number(item.percent) : null,
                 frequency: item.frequency,
                 categoryId: item.categoryId,
                 categoryName: item.category.name,
+                monthlyAmount: item.monthlyAmount,
               }}
               categories={categories}
               onUpdate={updateExpenseItem.bind(null, profileId, accountId, item.id)}
@@ -556,23 +568,42 @@ export default async function PayAccountPage({
           </label>
           <div className="flex flex-col sm:flex-row gap-3">
             <label className="text-sm text-muted-foreground flex-1">
+              Type
+              <Select name="amountType" defaultValue="FLAT" className="mt-1">
+                <option value="FLAT">Flat amount</option>
+                <option value="PERCENT_OF_GROSS">% of gross pay</option>
+              </Select>
+            </label>
+            <label className="text-sm text-muted-foreground flex-1">
               Amount
               <Input
-                name="amount"
+                name="flatAmount"
                 type="number"
                 step="0.01"
                 min="0"
-                required
+                placeholder="Flat $ amount"
                 className="mt-1"
               />
             </label>
             <label className="text-sm text-muted-foreground flex-1">
-              Frequency
-              <Select name="frequency" defaultValue="MONTHLY" className="mt-1">
-                <FrequencyOptions />
-              </Select>
+              Percent
+              <Input
+                name="percent"
+                type="number"
+                step="0.1"
+                min="0"
+                max="100"
+                placeholder="% of gross"
+                className="mt-1"
+              />
             </label>
           </div>
+          <label className="text-sm text-muted-foreground">
+            Frequency <span className="text-xs">(only applies to a flat amount)</span>
+            <Select name="frequency" defaultValue="MONTHLY" className="mt-1">
+              <FrequencyOptions />
+            </Select>
+          </label>
           <label className="text-sm text-muted-foreground">
             Category
             <CategoryCombobox name="categoryId" categories={categories} />

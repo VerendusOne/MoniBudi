@@ -32,7 +32,7 @@ export function normalizeToMonthly(
   }
 }
 
-export type SavingsItemInput = {
+export type AmountTypeItemInput = {
   amountType: "FLAT" | "PERCENT_OF_GROSS";
   flatAmount: number | null;
   percent: number | null;
@@ -40,13 +40,13 @@ export type SavingsItemInput = {
 };
 
 /**
- * Monthly amount for a savings item. Percent-based items (e.g. a 401k
- * contribution %) are computed directly against monthly gross income,
- * regardless of the stored frequency — the percentage already scales with
- * however often you're paid.
+ * Monthly amount for an expense or savings item. Percent-based items (e.g.
+ * a 401k contribution %, or an expense that scales with income) are
+ * computed directly against monthly gross income, regardless of the stored
+ * frequency — the percentage already scales with however often you're paid.
  */
-export function computeSavingsMonthly(
-  item: SavingsItemInput,
+export function computeAmountMonthly(
+  item: AmountTypeItemInput,
   monthlyGross: number,
   payFrequency: PayFrequency | null = null,
 ): number {

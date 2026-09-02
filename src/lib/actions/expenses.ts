@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { RecurrenceFrequency, SavingsAmountType } from "@/generated/prisma/enums";
+import { RecurrenceFrequency, AmountType } from "@/generated/prisma/enums";
 
 async function requireOwnedAccount(profileId: string, payAccountId: string) {
   const session = await auth();
@@ -19,6 +19,13 @@ async function requireOwnedAccount(profileId: string, payAccountId: string) {
 
 function num(formData: FormData, key: string): number {
   return Number(formData.get(key) ?? 0);
+}
+
+function parseAmountFields(formData: FormData) {
+  const amountType = String(formData.get("amountType")) as AmountType;
+  const flatAmount = amountType === "FLAT" ? num(formData, "flatAmount") : null;
+  const percent = amountType === "PERCENT_OF_GROSS" ? num(formData, "percent") : null;
+  return { amountType, flatAmount, percent };
 }
 
 // --- Categories ---------------------------------------------------------
@@ -85,14 +92,13 @@ export async function createExpenseItem(
   await requireOwnedAccount(profileId, payAccountId);
 
   const name = String(formData.get("name") ?? "").trim();
-  const amount = num(formData, "amount");
   const frequency = String(formData.get("frequency")) as RecurrenceFrequency;
   const categoryId = String(formData.get("categoryId") ?? "");
   if (!name) throw new Error("Name is required.");
   if (!categoryId) throw new Error("Please select a category.");
 
   await prisma.expenseItem.create({
-    data: { payAccountId, name, amount, frequency, categoryId },
+    data: { payAccountId, name, frequency, categoryId, ...parseAmountFields(formData) },
   });
 
   revalidatePath(`/dashboard/${profileId}/${payAccountId}`);
@@ -107,7 +113,6 @@ export async function updateExpenseItem(
   await requireOwnedAccount(profileId, payAccountId);
 
   const name = String(formData.get("name") ?? "").trim();
-  const amount = num(formData, "amount");
   const frequency = String(formData.get("frequency")) as RecurrenceFrequency;
   const categoryId = String(formData.get("categoryId") ?? "");
   if (!name) throw new Error("Name is required.");
@@ -115,7 +120,7 @@ export async function updateExpenseItem(
 
   await prisma.expenseItem.updateMany({
     where: { id: itemId, payAccountId },
-    data: { name, amount, frequency, categoryId },
+    data: { name, frequency, categoryId, ...parseAmountFields(formData) },
   });
 
   revalidatePath(`/dashboard/${profileId}/${payAccountId}`);
@@ -135,11 +140,8 @@ export async function deleteExpenseItem(
 
 function parseSavingsFields(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
-  const amountType = String(formData.get("amountType")) as SavingsAmountType;
   const frequency = String(formData.get("frequency")) as RecurrenceFrequency;
-  const flatAmount = amountType === "FLAT" ? num(formData, "flatAmount") : null;
-  const percent = amountType === "PERCENT_OF_GROSS" ? num(formData, "percent") : null;
-  return { name, amountType, frequency, flatAmount, percent };
+  return { name, frequency, ...parseAmountFields(formData) };
 }
 
 export async function createSavingsItem(

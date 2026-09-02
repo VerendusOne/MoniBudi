@@ -230,7 +230,9 @@ model ExpenseItem {
   payAccountId String
   payAccount   PayAccount          @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
   name         String
-  amount       Decimal             @db.Decimal(10, 2)
+  amountType   AmountType          @default(FLAT)
+  flatAmount   Decimal?            @db.Decimal(10, 2)
+  percent      Decimal?            @db.Decimal(5, 2)
   frequency    RecurrenceFrequency
   categoryId   String
   category     ExpenseCategory     @relation(fields: [categoryId], references: [id])
@@ -238,7 +240,7 @@ model ExpenseItem {
   createdAt DateTime @default(now())
 }
 
-enum SavingsAmountType {
+enum AmountType {
   FLAT
   PERCENT_OF_GROSS
 }
@@ -248,7 +250,7 @@ model SavingsItem {
   payAccountId String
   payAccount   PayAccount          @relation(fields: [payAccountId], references: [id], onDelete: Cascade)
   name         String
-  amountType   SavingsAmountType
+  amountType   AmountType
   flatAmount   Decimal?            @db.Decimal(10, 2)
   percent      Decimal?            @db.Decimal(5, 2)
   frequency    RecurrenceFrequency
