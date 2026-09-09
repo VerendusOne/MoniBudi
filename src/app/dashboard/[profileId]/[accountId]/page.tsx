@@ -40,12 +40,13 @@ import { deletePayAccount, renamePayAccount } from "@/lib/actions/payAccounts";
 import { InlineRenameHeading } from "@/components/dashboard/InlineRenameHeading";
 import { PayPeriodEntryRow } from "@/components/dashboard/PayPeriodEntryRow";
 import { ExtraIncomeRow } from "@/components/dashboard/ExtraIncomeRow";
-import { ExpenseItemRow, FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
+import { FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
+import { ExpensesList } from "@/components/dashboard/ExpensesList";
 import { CategoryChips } from "@/components/dashboard/CategoryChips";
 import { ExpandableAdd } from "@/components/dashboard/ExpandableAdd";
 import { AddExpenseOrSavings } from "@/components/dashboard/AddExpenseOrSavings";
 import { TaxSettingsForm } from "@/components/dashboard/TaxSettingsForm";
-import { SavingsItemRow } from "@/components/dashboard/SavingsItemRow";
+import { SavingsList } from "@/components/dashboard/SavingsList";
 import { HistoryTable } from "@/components/dashboard/HistoryTable";
 
 export default async function PayAccountPage({
@@ -540,32 +541,24 @@ export default async function PayAccountPage({
           amount automatically.
         </p>
 
-        <div className="flex flex-col gap-2">
-          {expenseItemsMonthly.map((item) => (
-            <ExpenseItemRow
-              key={item.id}
-              item={{
-                id: item.id,
-                name: item.name,
-                amountType: item.amountType,
-                flatAmount: item.flatAmount ? Number(item.flatAmount) : null,
-                percent: item.percent ? Number(item.percent) : null,
-                frequency: item.frequency,
-                categoryId: item.categoryId,
-                categoryName: item.category.name,
-                monthlyAmount: item.monthlyAmount,
-              }}
-              categories={categories}
-              onUpdate={updateExpenseItem.bind(null, profileId, accountId, item.id)}
-              onDelete={deleteExpenseItem.bind(null, profileId, accountId, item.id)}
-            />
-          ))}
-          {expenseItemsMonthly.length === 0 && (
-            <p className="text-muted-foreground text-sm">
-              No expenses added yet.
-            </p>
-          )}
-        </div>
+        <ExpensesList
+          rows={expenseItemsMonthly.map((item) => ({
+            item: {
+              id: item.id,
+              name: item.name,
+              amountType: item.amountType,
+              flatAmount: item.flatAmount ? Number(item.flatAmount) : null,
+              percent: item.percent ? Number(item.percent) : null,
+              frequency: item.frequency,
+              categoryId: item.categoryId,
+              categoryName: item.category.name,
+              monthlyAmount: item.monthlyAmount,
+            },
+            onUpdate: updateExpenseItem.bind(null, profileId, accountId, item.id),
+            onDelete: deleteExpenseItem.bind(null, profileId, accountId, item.id),
+          }))}
+          categories={categories}
+        />
 
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">Categories</p>
@@ -596,29 +589,21 @@ export default async function PayAccountPage({
           your left-over total above.
         </p>
 
-        <div className="flex flex-col gap-2">
-          {savingsItemsMonthly.map((item) => (
-            <SavingsItemRow
-              key={item.id}
-              item={{
-                id: item.id,
-                name: item.name,
-                amountType: item.amountType,
-                flatAmount: item.flatAmount ? Number(item.flatAmount) : null,
-                percent: item.percent ? Number(item.percent) : null,
-                frequency: item.frequency,
-                monthlyAmount: item.monthlyAmount,
-              }}
-              onUpdate={updateSavingsItem.bind(null, profileId, accountId, item.id)}
-              onDelete={deleteSavingsItem.bind(null, profileId, accountId, item.id)}
-            />
-          ))}
-          {savingsItemsMonthly.length === 0 && (
-            <p className="text-muted-foreground text-sm">
-              No savings items added yet.
-            </p>
-          )}
-        </div>
+        <SavingsList
+          rows={savingsItemsMonthly.map((item) => ({
+            item: {
+              id: item.id,
+              name: item.name,
+              amountType: item.amountType,
+              flatAmount: item.flatAmount ? Number(item.flatAmount) : null,
+              percent: item.percent ? Number(item.percent) : null,
+              frequency: item.frequency,
+              monthlyAmount: item.monthlyAmount,
+            },
+            onUpdate: updateSavingsItem.bind(null, profileId, accountId, item.id),
+            onDelete: deleteSavingsItem.bind(null, profileId, accountId, item.id),
+          }))}
+        />
 
       </section>
     </div>
