@@ -41,9 +41,9 @@ import { InlineRenameHeading } from "@/components/dashboard/InlineRenameHeading"
 import { PayPeriodEntryRow } from "@/components/dashboard/PayPeriodEntryRow";
 import { ExtraIncomeRow } from "@/components/dashboard/ExtraIncomeRow";
 import { ExpenseItemRow, FrequencyOptions } from "@/components/dashboard/ExpenseItemRow";
-import { CategoryCombobox } from "@/components/dashboard/CategoryCombobox";
 import { CategoryChips } from "@/components/dashboard/CategoryChips";
 import { ExpandableAdd } from "@/components/dashboard/ExpandableAdd";
+import { AddExpenseOrSavings } from "@/components/dashboard/AddExpenseOrSavings";
 import { TaxSettingsForm } from "@/components/dashboard/TaxSettingsForm";
 import { SavingsItemRow } from "@/components/dashboard/SavingsItemRow";
 import { HistoryTable } from "@/components/dashboard/HistoryTable";
@@ -520,6 +520,12 @@ export default async function PayAccountPage({
 
   const expensesTab = (
     <div className="max-w-2xl md:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-6">
+      <AddExpenseOrSavings
+        categories={categories}
+        onAddExpense={boundCreateExpenseItem}
+        onAddSavings={boundCreateSavingsItem}
+      />
+
       {/* Expenses */}
       <section className="bg-card border border-border/60 scroll-reveal rounded-2xl card-shadow p-6 lg:p-8 flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -560,55 +566,6 @@ export default async function PayAccountPage({
             </p>
           )}
         </div>
-
-        <ExpandableAdd label="Add Expense" action={boundCreateExpenseItem}>
-          <label className="text-sm text-muted-foreground">
-            Name
-            <Input name="name" placeholder="e.g. Rent" required className="mt-1" />
-          </label>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <label className="text-sm text-muted-foreground flex-1">
-              Type
-              <Select name="amountType" defaultValue="FLAT" className="mt-1">
-                <option value="FLAT">Flat amount</option>
-                <option value="PERCENT_OF_GROSS">% of gross pay</option>
-              </Select>
-            </label>
-            <label className="text-sm text-muted-foreground flex-1">
-              Amount
-              <Input
-                name="flatAmount"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="Flat $ amount"
-                className="mt-1"
-              />
-            </label>
-            <label className="text-sm text-muted-foreground flex-1">
-              Percent
-              <Input
-                name="percent"
-                type="number"
-                step="0.1"
-                min="0"
-                max="100"
-                placeholder="% of gross"
-                className="mt-1"
-              />
-            </label>
-          </div>
-          <label className="text-sm text-muted-foreground">
-            Frequency <span className="text-xs">(only applies to a flat amount)</span>
-            <Select name="frequency" defaultValue="MONTHLY" className="mt-1">
-              <FrequencyOptions />
-            </Select>
-          </label>
-          <label className="text-sm text-muted-foreground">
-            Category
-            <CategoryCombobox name="categoryId" categories={categories} />
-          </label>
-        </ExpandableAdd>
 
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">Categories</p>
@@ -663,50 +620,6 @@ export default async function PayAccountPage({
           )}
         </div>
 
-        <ExpandableAdd label="Add Savings Item" action={boundCreateSavingsItem}>
-          <label className="text-sm text-muted-foreground">
-            Name
-            <Input name="name" placeholder="e.g. 401k" required className="mt-1" />
-          </label>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <label className="text-sm text-muted-foreground flex-1">
-              Type
-              <Select name="amountType" defaultValue="FLAT" className="mt-1">
-                <option value="FLAT">Flat amount</option>
-                <option value="PERCENT_OF_GROSS">% of gross pay</option>
-              </Select>
-            </label>
-            <label className="text-sm text-muted-foreground flex-1">
-              Amount
-              <Input
-                name="flatAmount"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="Flat $ amount"
-                className="mt-1"
-              />
-            </label>
-            <label className="text-sm text-muted-foreground flex-1">
-              Percent
-              <Input
-                name="percent"
-                type="number"
-                step="0.1"
-                min="0"
-                max="100"
-                placeholder="% of gross"
-                className="mt-1"
-              />
-            </label>
-          </div>
-          <label className="text-sm text-muted-foreground">
-            Frequency <span className="text-xs">(only applies to a flat amount)</span>
-            <Select name="frequency" defaultValue="PER_PAYCHECK" className="mt-1">
-              <FrequencyOptions />
-            </Select>
-          </label>
-        </ExpandableAdd>
       </section>
     </div>
   );
@@ -752,7 +665,7 @@ export default async function PayAccountPage({
       <TabsShell
         tabs={[
           { key: "home", label: "Home", content: homeTab },
-          { key: "expenses", label: "Expenses", content: expensesTab },
+          { key: "expenses", label: "Expenses & Savings", content: expensesTab },
           { key: "history", label: "History", content: historyTab },
           { key: "taxes", label: "Taxes", content: taxesTab },
         ]}

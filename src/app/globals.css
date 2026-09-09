@@ -90,6 +90,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* iOS Safari auto-zooms into any text input/select/textarea with a
+   computed font-size under 16px, and doesn't zoom back out on blur. Setting
+   a 16px floor here (low specificity — any explicit Tailwind text-size
+   class on a specific input still wins) avoids the zoom entirely rather
+   than fighting it after the fact. */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
 /* Stronger easing curves than CSS's built-in keywords — those are too weak
    to feel intentional. Used via arbitrary Tailwind values, e.g.
    ease-[var(--ease-out)]. */
