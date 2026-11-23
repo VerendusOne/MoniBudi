@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Light palette (default) — neutral gray, teal-green accent. Same system as
+/* Light palette (default) — neutral gray, green accent. Same system as
    dark (see below), just without the glass/blur treatment — backdrop-blur
    over a light background reads as murky rather than premium, so light
    mode stays a clean, softly-elevated look instead. */
@@ -13,12 +13,12 @@
   --muted: #ececec;
   --muted-foreground: #6b6b6b;
   --border: #e0e0e0;
-  --accent: #0e9c74;
-  --accent-bright: #17b98a;
-  --accent-deep: #0b7c5c;
+  --accent: #238636;
+  --accent-bright: #2ea043;
+  --accent-deep: #196c2e;
   --accent-foreground: #ffffff;
   --radius-card: 1rem;
-  --shadow-card: 0 1px 2px rgba(14, 156, 116, 0.05), 0 16px 40px rgba(14, 156, 116, 0.07);
+  --shadow-card: 0 1px 2px rgba(35, 134, 54, 0.05), 0 16px 40px rgba(35, 134, 54, 0.07);
   --blob-opacity: 0.16;
 }
 
@@ -33,10 +33,10 @@
     --muted: #1c1e26;
     --muted-foreground: #9a9ea8;
     --border: rgba(255, 255, 255, 0.1);
-    --accent: #22c99a;
-    --accent-bright: #5eeec0;
-    --accent-deep: #109c74;
-    --accent-foreground: #052e22;
+    --accent: #238636;
+    --accent-bright: #2ea043;
+    --accent-deep: #196c2e;
+    --accent-foreground: #ffffff;
     --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 24px 60px rgba(0, 0, 0, 0.5),
       0 0 0 1px rgba(255, 255, 255, 0.03);
     --blob-opacity: 0.3;
@@ -53,10 +53,10 @@
   --muted: #1c1e26;
   --muted-foreground: #9a9ea8;
   --border: rgba(255, 255, 255, 0.1);
-  --accent: #22c99a;
-  --accent-bright: #5eeec0;
-  --accent-deep: #109c74;
-  --accent-foreground: #052e22;
+  --accent: #238636;
+  --accent-bright: #2ea043;
+  --accent-deep: #196c2e;
+  --accent-foreground: #ffffff;
   --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 24px 60px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.03);
   --blob-opacity: 0.3;
