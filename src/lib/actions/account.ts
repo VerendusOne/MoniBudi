@@ -3,37 +3,28 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
-import { put, del } from "@vercel/blob";
+import { head, del } from "@vercel/blob";
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
-const ALLOWED_AVATAR_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
+import { ALLOWED_AVATAR_TYPES, MAX_AVATAR_BYTES } from "@/lib/avatar";
 
-export async function updateAvatar(formData: FormData) {
+export async function updateAvatar(pathname: string) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const file = formData.get("avatar");
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: "Please choose an image." };
+  const prefix = `avatars/${session.user.id}/`;
+  if (!pathname.startsWith(prefix) || pathname.slice(prefix.length).includes("/")) {
+    return { error: "Unable to save photo." };
   }
-  if (!ALLOWED_AVATAR_TYPES.has(file.type)) {
-    return { error: "Please choose a PNG, JPEG, WEBP, or GIF image." };
-  }
-  if (file.size > MAX_AVATAR_BYTES) {
-    return { error: "Image must be under 5MB." };
+  const blob = await head(pathname);
+  if (blob.size === 0 || blob.size > MAX_AVATAR_BYTES || !ALLOWED_AVATAR_TYPES.includes(blob.contentType)) {
+    return { error: "Please choose a valid image up to 5 MB." };
   }
 
   const previous = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: { image: true },
-  });
-
-  const extension = file.type.split("/")[1] ?? "png";
-  const blob = await put(`avatars/${session.user.id}-${Date.now()}.${extension}`, file, {
-    access: "public",
-    addRandomSuffix: false,
   });
 
   await prisma.user.update({
@@ -43,7 +34,7 @@ export async function updateAvatar(formData: FormData) {
 
   // Best-effort cleanup of the old file — a failure here shouldn't block
   // the new avatar from taking effect.
-  if (previous?.image) {
+  if (previous?.image && previous.image !== blob.url) {
     await del(previous.image).catch(() => {});
   }
 

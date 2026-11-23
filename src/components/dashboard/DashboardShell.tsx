@@ -16,6 +16,7 @@ type SidebarProfile = {
 };
 
 export function DashboardShell({
+  userId,
   profiles,
   userName,
   userEmail,
@@ -23,6 +24,7 @@ export function DashboardShell({
   signOutForm,
   children,
 }: {
+  userId: string;
   profiles: SidebarProfile[];
   userName: string | null | undefined;
   userEmail: string | null | undefined;
@@ -86,6 +88,7 @@ export function DashboardShell({
         </div>
 
         <SettingsPanel
+          userId={userId}
           open={settingsOpen}
           onClose={() => setSettingsOpen(false)}
           name={userName ?? null}

@@ -7,6 +7,7 @@ import { PasswordForm } from "@/components/settings/PasswordForm";
 import { DeleteAccountSection } from "@/components/settings/DeleteAccountSection";
 
 export function SettingsPanel({
+  userId,
   open,
   onClose,
   name,
@@ -14,6 +15,7 @@ export function SettingsPanel({
   avatarUrl,
   signOutForm,
 }: {
+  userId: string;
   open: boolean;
   onClose: () => void;
   name: string | null;
@@ -56,7 +58,7 @@ export function SettingsPanel({
 
           <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">
             <h2 className="text-base font-semibold">Your Account</h2>
-            <AccountForm name={name} email={email} avatarUrl={avatarUrl} />
+            <AccountForm userId={userId} name={name} email={email} avatarUrl={avatarUrl} />
           </section>
 
           <section className="bg-card border border-border/60 rounded-2xl card-shadow p-6 flex flex-col gap-4">

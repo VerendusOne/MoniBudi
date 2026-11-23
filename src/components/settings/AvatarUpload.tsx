@@ -2,15 +2,19 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { upload } from "@vercel/blob/client";
+import { ALLOWED_AVATAR_TYPES, MAX_AVATAR_BYTES } from "@/lib/avatar";
 import { Avatar } from "@/components/Avatar";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { updateAvatar, removeAvatar } from "@/lib/actions/account";
 
 export function AvatarUpload({
+  userId,
   avatarUrl,
   name,
   email,
 }: {
+  userId: string;
   avatarUrl: string | null;
   name: string | null;
   email: string | null;
@@ -28,20 +32,35 @@ export function AvatarUpload({
     if (!file) return;
 
     setError(null);
+    if (file.size > MAX_AVATAR_BYTES) {
+      setError("Image is too large. Please choose a photo of 5 MB or less.");
+      return;
+    }
+    if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
+      setError("Please choose a PNG, JPEG, WEBP, or GIF image.");
+      return;
+    }
     const objectUrl = URL.createObjectURL(file);
     setPreview(objectUrl);
     setPending(true);
 
-    const formData = new FormData();
-    formData.set("avatar", file);
     try {
-      const result = await updateAvatar(formData);
+      const blob = await upload(`avatars/${userId}/${crypto.randomUUID()}`, file, {
+        access: "public",
+        handleUploadUrl: "/api/avatar/upload",
+        contentType: file.type,
+      });
+      const result = await updateAvatar(blob.pathname);
       if (result?.error) {
         setError(result.error);
         setPreview(null);
       } else {
+        setPreview(null);
         router.refresh();
       }
+    } catch {
+      setError("Could not save your photo. Please try again.");
+      setPreview(null);
     } finally {
       setPending(false);
       URL.revokeObjectURL(objectUrl);
@@ -98,7 +117,7 @@ export function AvatarUpload({
           )}
         </div>
         <p className="text-xs text-muted-foreground">PNG, JPEG, WEBP, or GIF. Up to 5MB.</p>
-        {error && <p className="text-xs text-red-500">{error}</p>}
+        {error && <p role="status" className="text-xs text-red-500">{error}</p>}
       </div>
       <input
         ref={inputRef}

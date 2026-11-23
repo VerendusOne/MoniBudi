@@ -9,10 +9,12 @@ import { updateUserProfile } from "@/lib/actions/account";
 type State = { error: string | null };
 
 export function AccountForm({
+  userId,
   name,
   email,
   avatarUrl,
 }: {
+  userId: string;
   name: string | null;
   email: string | null;
   avatarUrl: string | null;
@@ -24,7 +26,7 @@ export function AccountForm({
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <AvatarUpload avatarUrl={avatarUrl} name={name} email={email} />
+      <AvatarUpload userId={userId} avatarUrl={avatarUrl} name={name} email={email} />
       <label className="text-sm text-muted-foreground">
         Name
         <Input name="name" defaultValue={name ?? ""} placeholder="Your name" className="mt-1" />
