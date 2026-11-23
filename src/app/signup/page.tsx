@@ -54,7 +54,7 @@ export default function SignupPage() {
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-8 gap-6">
       <AmbientBackground />
-      <Image src="/logo.png" alt="MoniBudi" width={56} height={56} className="rounded-xl" priority />
+      <Image src="/monibudi-mark.png" alt="MoniBudi" width={56} height={56} className="rounded-xl" priority />
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm bg-card border border-border/60 rounded-2xl card-shadow p-8 flex flex-col gap-4"

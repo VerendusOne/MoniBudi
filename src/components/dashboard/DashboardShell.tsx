@@ -50,7 +50,7 @@ export function DashboardShell({
               </svg>
             </button>
             <a href="/dashboard" className="flex items-center gap-2 font-semibold">
-              <Image src="/logo.png" alt="" width={24} height={24} className="rounded-md" />
+              <Image src="/monibudi-mark.png" alt="" width={24} height={24} className="rounded-md" />
               MoniBudi
             </a>
           </div>

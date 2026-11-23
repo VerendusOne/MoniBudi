@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <main className="flex-1 flex flex-col items-center justify-center gap-6 p-8 text-center">
       <AmbientBackground />
-      <Image src="/logo.png" alt="MoniBudi" width={72} height={72} className="rounded-2xl" priority />
+      <Image src="/monibudi-mark.png" alt="MoniBudi" width={72} height={72} className="rounded-2xl" priority />
       <h1 className="text-3xl font-semibold">MoniBudi</h1>
       <p className="text-muted-foreground max-w-sm">
         Paycheck-first budgeting: hours, taxes, expenses, and savings, all in
